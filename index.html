@@ -96,6 +96,9 @@
   .chk-box{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
   .chk-box.on{background:var(--green);border-color:var(--green);}
   .chk-box svg{display:none;} .chk-box.on svg{display:block;}
+  .rgo-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all 0.15s;}
+  .rgo-check.on{background:var(--green);border-color:var(--green);}
+  .rgo-check svg{display:none;} .rgo-check.on svg{display:block;}
   .chk-text{flex:1;font-size:12px;color:var(--text2);}
   .chk-item.on .chk-text{color:var(--text);}
   .chk-pts{font-size:11px;font-weight:700;color:var(--text3);min-width:28px;text-align:right;}
@@ -225,6 +228,55 @@
 
 <!-- PRÉ-TRADE -->
 <div id="panel-pre" class="panel active">
+
+  <div class="stitle" style="margin-top:0;">Etapa 0 — Regra de ouro BTC (obrigatória antes de qualquer altcoin)</div>
+  <div id="rgo-box" class="card" style="border:1.5px solid var(--amber);background:var(--amber-bg);">
+    <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+      <span>⚠</span> Responda as 3 perguntas antes de passar para o checklist SMC
+    </div>
+    <div style="display:grid;gap:8px;">
+
+      <div class="rgo-row" id="rgo1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div class="rgo-check" id="rc1" onclick="togRgo(1)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span style="font-size:13px;font-weight:500;color:var(--text);">BTC está em zona de SUPORTE (não em resistência)</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);padding-left:28px;">Verificar no TradingView 1H: BTC em +OB ou FVG bullish? Resposta SIM = positivo ✓</div>
+      </div>
+
+      <div style="height:0.5px;background:var(--border);"></div>
+
+      <div class="rgo-row" id="rgo2">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div class="rgo-check" id="rc2" onclick="togRgo(2)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span style="font-size:13px;font-weight:500;color:var(--text);">BTC.D está CAINDO nas últimas 4h</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);padding-left:28px;">BTC.D caindo = capital rotacionando para altcoins. Verificar no TradingView par BTC.D. Resposta SIM = positivo ✓</div>
+      </div>
+
+      <div style="height:0.5px;background:var(--border);"></div>
+
+      <div class="rgo-row" id="rgo3">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div class="rgo-check" id="rc3" onclick="togRgo(3)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span style="font-size:13px;font-weight:500;color:var(--text);">ETH/BTC está GANHANDO força (par ETH/BTC subindo)</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);padding-left:28px;">ETH/BTC subindo = rotação confirmada para altcoins. Verificar par ETHBTC no TradingView. Resposta SIM = positivo ✓</div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:12px;padding:10px 12px;border-radius:var(--radius);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div>
+        <span style="font-size:12px;color:var(--text2);">Positivos: </span>
+        <span style="font-size:14px;font-weight:700;" id="rgo-count">0 / 3</span>
+      </div>
+      <div id="rgo-verdict" style="font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;background:var(--bg4);color:var(--text3);">Responda as perguntas</div>
+      <button class="btn btn-ghost" onclick="resetRgo()" style="font-size:11px;padding:4px 10px;">Resetar</button>
+    </div>
+  </div>
+
+
   <div class="mg4">
     <div class="mc"><div class="mc-lbl">Balance</div><div class="mc-val cg" id="p-bal-disp">$90</div><div class="mc-sub">capital atual</div></div>
     <div class="mc"><div class="mc-lbl">Score</div><div class="mc-val cp" id="p-score-disp">0/100</div><div class="mc-sub" id="p-tier-sub">sem critérios</div></div>
@@ -747,6 +799,47 @@ function updateClock(){
   else if(hour>=13&&hour<17){sess.textContent='Sessão Nova York';sess.className='chip chip-g';}
   else if(hour>=0&&hour<7){sess.textContent='Sessão Ásia — cuidado';sess.className='chip chip-r';}
   else{sess.textContent='Entre sessões';sess.className='chip chip-a';}
+}
+
+const rgoState={1:false,2:false,3:false};
+function togRgo(n){
+  rgoState[n]=!rgoState[n];
+  const el=document.getElementById('rc'+n);
+  el.classList.toggle('on',rgoState[n]);
+  const count=Object.values(rgoState).filter(Boolean).length;
+  document.getElementById('rgo-count').textContent=count+' / 3';
+  const vEl=document.getElementById('rgo-verdict');
+  const box=document.getElementById('rgo-box');
+  if(count===3){
+    vEl.textContent='✓ Verde — pode analisar o setup';
+    vEl.style.background='rgba(29,184,122,0.15)';
+    vEl.style.color='#1db87a';
+    box.style.borderColor='var(--green)';
+    box.style.background='var(--green-bg)';
+  } else if(count===2){
+    vEl.textContent='⚠ Atenção — 1 negativo, prosseguir com cautela';
+    vEl.style.background='rgba(240,160,48,0.15)';
+    vEl.style.color='var(--amber)';
+    box.style.borderColor='var(--amber)';
+    box.style.background='var(--amber-bg)';
+  } else {
+    vEl.textContent='✕ Bloqueado — não entrar em altcoin agora';
+    vEl.style.background='rgba(226,75,74,0.15)';
+    vEl.style.color='var(--red)';
+    box.style.borderColor='var(--red)';
+    box.style.background='var(--red-bg)';
+  }
+}
+function resetRgo(){
+  [1,2,3].forEach(n=>{rgoState[n]=false;document.getElementById('rc'+n).classList.remove('on');});
+  document.getElementById('rgo-count').textContent='0 / 3';
+  const vEl=document.getElementById('rgo-verdict');
+  vEl.textContent='Responda as perguntas';
+  vEl.style.background='var(--bg4)';
+  vEl.style.color='var(--text3)';
+  const box=document.getElementById('rgo-box');
+  box.style.borderColor='var(--amber)';
+  box.style.background='var(--amber-bg)';
 }
 
 buildChk(); calc(); calcMetas();
