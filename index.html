@@ -231,47 +231,101 @@
 
   <div class="stitle" style="margin-top:0;">Etapa 0 — Regra de ouro BTC (obrigatória antes de qualquer altcoin)</div>
   <div id="rgo-box" class="card" style="border:1.5px solid var(--amber);background:var(--amber-bg);">
-    <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-      <span>⚠</span> Responda as 3 perguntas antes de passar para o checklist SMC
-    </div>
-    <div style="display:grid;gap:8px;">
-
-      <div class="rgo-row" id="rgo1">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <div class="rgo-check" id="rc1" onclick="togRgo(1)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span style="font-size:13px;font-weight:500;color:var(--text);">BTC está em zona de SUPORTE (não em resistência)</span>
-        </div>
-        <div style="font-size:11px;color:var(--text2);padding-left:28px;">Verificar no TradingView 1H: BTC em +OB ou FVG bullish? Resposta SIM = positivo ✓</div>
-      </div>
-
-      <div style="height:0.5px;background:var(--border);"></div>
-
-      <div class="rgo-row" id="rgo2">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <div class="rgo-check" id="rc2" onclick="togRgo(2)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span style="font-size:13px;font-weight:500;color:var(--text);">BTC.D está CAINDO nas últimas 4h</span>
-        </div>
-        <div style="font-size:11px;color:var(--text2);padding-left:28px;">BTC.D caindo = capital rotacionando para altcoins. Verificar no TradingView par BTC.D. Resposta SIM = positivo ✓</div>
-      </div>
-
-      <div style="height:0.5px;background:var(--border);"></div>
-
-      <div class="rgo-row" id="rgo3">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <div class="rgo-check" id="rc3" onclick="togRgo(3)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span style="font-size:13px;font-weight:500;color:var(--text);">ETH/BTC está GANHANDO força (par ETH/BTC subindo)</span>
-        </div>
-        <div style="font-size:11px;color:var(--text2);padding-left:28px;">ETH/BTC subindo = rotação confirmada para altcoins. Verificar par ETHBTC no TradingView. Resposta SIM = positivo ✓</div>
-      </div>
-
+    <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+      <span>⚠</span> Etapa 0 — responda antes de qualquer altcoin. 2 de 3 negativos = não entra.
     </div>
 
-    <div style="margin-top:12px;padding:10px 12px;border-radius:var(--radius);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <div>
-        <span style="font-size:12px;color:var(--text2);">Positivos: </span>
-        <span style="font-size:14px;font-weight:700;" id="rgo-count">0 / 3</span>
+    <!-- Q1 BTC suporte -->
+    <div style="background:var(--bg3);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div class="rgo-check" id="rc1" onclick="togRgo(1)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span style="font-size:13px;font-weight:500;color:var(--text);">P1 — BTC está em zona de SUPORTE</span>
+        <a href="https://www.tradingview.com/chart/?symbol=BYBIT%3ABTCUSDT.P" target="_blank" style="margin-left:auto;font-size:10px;color:var(--blue);text-decoration:none;white-space:nowrap;">Abrir BTC 1H ↗</a>
       </div>
-      <div id="rgo-verdict" style="font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;background:var(--bg4);color:var(--text3);">Responda as perguntas</div>
+      <div style="font-size:11px;color:var(--text2);padding-left:28px;margin-bottom:8px;">TradingView 1H · BTC em +OB ou FVG bullish? Bias 1H BULLISH no MSS Engine?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding-left:28px;">
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Suporte chave</div>
+          <div style="font-size:12px;font-weight:600;color:var(--green);">$63.000–63.600</div>
+          <div style="font-size:10px;color:var(--text3);">+OB duplo + FVG</div>
+        </div>
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Suporte 2</div>
+          <div style="font-size:12px;font-weight:600;color:var(--green);">$61.000–62.000</div>
+          <div style="font-size:10px;color:var(--text3);">Canal ascendente</div>
+        </div>
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Resistência</div>
+          <div style="font-size:12px;font-weight:600;color:var(--red);">$64.800–66.000</div>
+          <div style="font-size:10px;color:var(--text3);">-OB bearish forte</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 BTC.D -->
+    <div style="background:var(--bg3);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div class="rgo-check" id="rc2" onclick="togRgo(2)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span style="font-size:13px;font-weight:500;color:var(--text);">P2 — BTC.D caindo nas últimas 4h</span>
+        <a href="https://www.tradingview.com/chart/?symbol=BTC.D" target="_blank" style="margin-left:auto;font-size:10px;color:var(--blue);text-decoration:none;white-space:nowrap;">Abrir BTC.D 4H ↗</a>
+      </div>
+      <div style="font-size:11px;color:var(--text2);padding-left:28px;margin-bottom:8px;">Capital saindo do BTC = fluindo para altcoins. Bias 4H BEARISH no BTC.D = positivo para altcoins.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding-left:28px;">
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Zona de bloqueio</div>
+          <div style="font-size:12px;font-weight:600;color:var(--red);">Acima de 61%</div>
+          <div style="font-size:10px;color:var(--text3);">Risk-off — sair de alts</div>
+        </div>
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Zona de decisão</div>
+          <div style="font-size:12px;font-weight:600;color:var(--amber);">58,9–61%</div>
+          <div style="font-size:10px;color:var(--text3);">-OB atual · indecisão</div>
+        </div>
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Altseason plena</div>
+          <div style="font-size:12px;font-weight:600;color:var(--green);">Abaixo de 57,5%</div>
+          <div style="font-size:10px;color:var(--text3);">+OB suporte macro</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 ETH/BTC -->
+    <div style="background:var(--bg3);border-radius:var(--radius);padding:10px 12px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div class="rgo-check" id="rc3" onclick="togRgo(3)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span style="font-size:13px;font-weight:500;color:var(--text);">P3 — ETH/BTC ganhando força no 4H</span>
+        <a href="https://www.tradingview.com/chart/?symbol=ETHBTC" target="_blank" style="margin-left:auto;font-size:10px;color:var(--blue);text-decoration:none;white-space:nowrap;">Abrir ETHBTC 4H ↗</a>
+      </div>
+      <div style="font-size:11px;color:var(--text2);padding-left:28px;margin-bottom:8px;">ETH/BTC subindo = rotação confirmada para altcoins. Bias 4H BULLISH no ETHBTC = sinal precoce de altseason.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding-left:28px;">
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Sinal positivo</div>
+          <div style="font-size:12px;font-weight:600;color:var(--green);">HH + HL no 4H</div>
+          <div style="font-size:10px;color:var(--text3);">Rotação confirmada</div>
+        </div>
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Sinal negativo</div>
+          <div style="font-size:12px;font-weight:600;color:var(--red);">LH + LL no 4H</div>
+          <div style="font-size:10px;color:var(--text3);">Sem rotação · cuidado</div>
+        </div>
+        <div style="background:var(--bg4);border-radius:4px;padding:6px 8px;">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">Agora (21/06)</div>
+          <div style="font-size:12px;font-weight:600;color:var(--red);">BEARISH</div>
+          <div style="font-size:10px;color:var(--text3);">-0,60% · 7 Bear OBs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Veredicto -->
+    <div style="padding:10px 12px;border-radius:var(--radius);background:var(--bg);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border:1px solid var(--border2);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:1px;">Confirmados</div>
+          <div style="font-size:18px;font-weight:700;" id="rgo-count">0 / 3</div>
+        </div>
+        <div style="width:1px;height:32px;background:var(--border2);"></div>
+        <div id="rgo-verdict" style="font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;background:var(--bg4);color:var(--text3);">Responda as perguntas</div>
+      </div>
       <button class="btn btn-ghost" onclick="resetRgo()" style="font-size:11px;padding:4px 10px;">Resetar</button>
     </div>
   </div>
