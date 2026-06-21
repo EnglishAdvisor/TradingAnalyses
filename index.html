@@ -3,752 +3,754 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trading Cockpit — $90 → $1.000</title>
+<title>Trading Cockpit — EnglishAdvisor</title>
 <style>
   :root {
-    --bg: #0d0f14;
-    --bg2: #13161e;
-    --bg3: #1a1e28;
-    --bg4: #222737;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.13);
-    --text: #e8eaf0;
-    --text2: #8b90a0;
-    --text3: #555a6e;
-    --green: #1db87a;
-    --green2: #0f7a52;
-    --green-bg: rgba(29,184,122,0.1);
-    --red: #e24b4a;
-    --red-bg: rgba(226,75,74,0.1);
-    --amber: #f0a030;
-    --amber-bg: rgba(240,160,48,0.1);
-    --blue: #3d8ef0;
-    --blue-bg: rgba(61,142,240,0.1);
-    --purple: #8b7fe8;
-    --purple-bg: rgba(139,127,232,0.1);
-    --radius: 8px;
-    --radius-lg: 12px;
+    --bg:#0d0f14; --bg2:#13161e; --bg3:#1a1e28; --bg4:#222737;
+    --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+    --text:#e8eaf0; --text2:#8b90a0; --text3:#555a6e;
+    --green:#1db87a; --green2:#0f7a52; --green-bg:rgba(29,184,122,0.1);
+    --red:#e24b4a; --red-bg:rgba(226,75,74,0.1);
+    --amber:#f0a030; --amber-bg:rgba(240,160,48,0.1);
+    --blue:#3d8ef0; --blue-bg:rgba(61,142,240,0.1);
+    --purple:#8b7fe8; --purple-bg:rgba(139,127,232,0.1);
+    --radius:8px; --radius-lg:12px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
-  
-  /* Layout */
-  .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-  .header-left { display: flex; align-items: center; gap: 12px; }
-  .logo { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
-  .logo span { color: var(--green); }
-  .header-chips { display: flex; gap: 8px; }
-  .chip { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-  .chip-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(29,184,122,0.25); }
-  .chip-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(240,160,48,0.25); }
-  .chip-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(61,142,240,0.25); }
-  .header-time { font-size: 11px; color: var(--text3); font-variant-numeric: tabular-nums; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
 
-  .main { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 56px); }
-  
-  /* Sidebar */
-  .sidebar { background: var(--bg2); border-right: 1px solid var(--border); padding: 16px 0; }
-  .sidebar-section { margin-bottom: 4px; }
-  .sidebar-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; padding: 8px 16px 4px; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; cursor: pointer; color: var(--text2); font-size: 13px; font-weight: 500; border-left: 2px solid transparent; transition: all 0.15s; user-select: none; }
-  .nav-item:hover { background: var(--bg3); color: var(--text); }
-  .nav-item.active { background: var(--bg3); color: var(--green); border-left-color: var(--green); }
-  .nav-item .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .nav-item .icon { font-size: 15px; width: 18px; text-align: center; }
-  
-  .sidebar-stats { margin: 16px; padding: 12px; background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); }
-  .ss-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .ss-row:last-child { margin-bottom: 0; }
-  .ss-label { font-size: 11px; color: var(--text3); }
-  .ss-val { font-size: 12px; font-weight: 600; }
-  .progress-bar { height: 4px; background: var(--bg4); border-radius: 2px; overflow: hidden; margin-top: 8px; }
-  .progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.5s; }
+  .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .logo{font-size:14px;font-weight:700;letter-spacing:-0.02em;}
+  .logo span{color:var(--green);}
+  .hchips{display:flex;gap:6px;flex-wrap:wrap;}
+  .chip{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;}
+  .chip-g{background:var(--green-bg);color:var(--green);border:1px solid rgba(29,184,122,0.25);}
+  .chip-a{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(240,160,48,0.25);}
+  .chip-b{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(61,142,240,0.25);}
+  .chip-r{background:var(--red-bg);color:var(--red);border:1px solid rgba(226,75,74,0.25);}
+  .htime{font-size:11px;color:var(--text3);font-variant-numeric:tabular-nums;}
 
-  /* Content */
-  .content { padding: 24px; overflow-y: auto; }
-  .panel { display: none; }
-  .panel.active { display: block; }
+  .main{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 52px);}
+  .sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:12px 0;overflow-y:auto;}
+  .slbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;padding:8px 14px 3px;}
+  .nav{display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;color:var(--text2);font-size:12px;font-weight:500;border-left:2px solid transparent;transition:all 0.15s;user-select:none;}
+  .nav:hover{background:var(--bg3);color:var(--text);}
+  .nav.active{background:var(--bg3);color:var(--green);border-left-color:var(--green);}
+  .nav .ic{font-size:14px;width:16px;text-align:center;}
 
-  /* Cards */
-  .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-  .metric-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; }
-  .metric-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-  .metric-value { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
-  .metric-sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
-  .col-green { color: var(--green); } .col-red { color: var(--red); }
-  .col-amber { color: var(--amber); } .col-blue { color: var(--blue); }
-  .col-purple { color: var(--purple); }
+  .sb-box{margin:12px;padding:10px 12px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border);}
+  .sb-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+  .sb-row:last-child{margin-bottom:0;}
+  .sb-lbl{font-size:10px;color:var(--text3);}
+  .sb-val{font-size:12px;font-weight:700;}
+  .prog-bar{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:6px;}
+  .prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.5s;}
 
-  .section-title { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin: 20px 0 10px; }
-  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 12px; }
+  .content{padding:20px;overflow-y:auto;}
+  .panel{display:none;} .panel.active{display:block;}
+
+  .mg4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+  .mg3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+  .mg2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;}
+  .mc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;}
+  .mc-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;}
+  .mc-val{font-size:20px;font-weight:700;letter-spacing:-0.02em;}
+  .mc-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+  .cg{color:var(--green);} .cr{color:var(--red);} .ca{color:var(--amber);} .cb{color:var(--blue);} .cp{color:var(--purple);}
+
+  .stitle{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin:16px 0 8px;}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:10px;}
+
+  /* Watchlist */
+  .wl-row{display:grid;grid-template-columns:100px 70px 70px 1fr 90px;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);}
+  .wl-row:last-child{border-bottom:none;}
+  .wl-par{font-size:13px;font-weight:700;color:var(--text);}
+  .wl-price{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;}
+  .wl-bias{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+  .bias-bull{background:var(--green-bg);color:var(--green);}
+  .bias-bear{background:var(--red-bg);color:var(--red);}
+  .bias-neut{background:var(--bg3);color:var(--text3);}
+  .wl-note{font-size:11px;color:var(--text2);}
+  .wl-action{font-size:11px;font-weight:600;text-align:right;}
+
+  /* Alarm */
+  .alarm-priority{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius);margin-bottom:6px;border:1px solid;}
+  .ap-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .ap-par{font-size:13px;font-weight:700;width:90px;flex-shrink:0;}
+  .ap-price{font-size:12px;flex:1;}
+  .ap-why{font-size:11px;color:var(--text2);flex:1;}
+  .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;}
+
+  /* Tools */
+  .tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+  .tool-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;cursor:pointer;transition:all 0.15s;text-decoration:none;display:block;}
+  .tool-card:hover{border-color:var(--border2);background:var(--bg4);}
+  .tc-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+  .tc-use{font-size:11px;color:var(--text2);line-height:1.4;}
+  .tc-tag{font-size:10px;font-weight:600;margin-top:4px;display:inline-block;padding:1px 6px;border-radius:10px;}
 
   /* Checklist */
-  .chk-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; transition: background 0.1s; }
-  .chk-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .chk-item:first-child { padding-top: 0; }
-  .chk-item:hover { opacity: 0.85; }
-  .chk-box { width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
-  .chk-box.on { background: var(--green); border-color: var(--green); }
-  .chk-box svg { display: none; }
-  .chk-box.on svg { display: block; }
-  .chk-text { flex: 1; font-size: 13px; color: var(--text2); transition: color 0.15s; }
-  .chk-item.on .chk-text { color: var(--text); }
-  .chk-pts { font-size: 12px; font-weight: 700; color: var(--text3); transition: color 0.15s; min-width: 32px; text-align: right; }
-  .chk-item.on .chk-pts { color: var(--green); }
+  .chk-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+  .chk-item:last-child{border-bottom:none;padding-bottom:0;}
+  .chk-item:first-child{padding-top:0;}
+  .chk-box{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
+  .chk-box.on{background:var(--green);border-color:var(--green);}
+  .chk-box svg{display:none;} .chk-box.on svg{display:block;}
+  .chk-text{flex:1;font-size:12px;color:var(--text2);}
+  .chk-item.on .chk-text{color:var(--text);}
+  .chk-pts{font-size:11px;font-weight:700;color:var(--text3);min-width:28px;text-align:right;}
+  .chk-item.on .chk-pts{color:var(--green);}
+  .chk-src{font-size:10px;color:var(--text3);background:var(--bg3);padding:1px 5px;border-radius:4px;flex-shrink:0;}
 
-  /* Score */
-  .score-display { background: var(--bg3); border-radius: var(--radius); padding: 14px 16px; margin: 12px 0; }
-  .score-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .score-bar { height: 10px; background: var(--bg4); border-radius: 5px; overflow: hidden; }
-  .score-fill { height: 100%; border-radius: 5px; transition: width 0.4s, background 0.4s; }
-  .score-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-top: 4px; }
-  .verdict-box { border-radius: var(--radius); padding: 12px 16px; margin-top: 12px; border: 1px solid; }
-  .verdict-tier { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
-  .verdict-msg { font-size: 12px; line-height: 1.5; }
-  
-  /* Calc grid */
-  .calc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
-  .calc-cell { background: var(--bg3); border-radius: var(--radius); padding: 10px 12px; }
-  .calc-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-  .calc-val { font-size: 16px; font-weight: 700; }
+  .score-wrap{background:var(--bg3);border-radius:var(--radius);padding:12px 14px;margin:10px 0;}
+  .score-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .score-bar{height:10px;background:var(--bg4);border-radius:5px;overflow:hidden;}
+  .score-fill{height:100%;border-radius:5px;transition:width 0.4s,background 0.4s;}
+  .score-ticks{display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:3px;}
+  .verdict{border-radius:var(--radius);padding:10px 14px;margin-top:10px;border:1px solid;}
+  .v-tier{font-size:14px;font-weight:700;margin-bottom:2px;}
+  .v-msg{font-size:12px;color:var(--text2);line-height:1.5;}
 
-  /* Sliders */
-  .slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-  .slider-label { font-size: 12px; color: var(--text2); width: 160px; flex-shrink: 0; }
-  .slider-row input[type=range] { flex: 1; -webkit-appearance: none; height: 4px; background: var(--bg4); border-radius: 2px; outline: none; cursor: pointer; }
-  .slider-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--green); cursor: pointer; }
-  .slider-val { font-size: 13px; font-weight: 600; min-width: 52px; text-align: right; color: var(--text); }
+  .calc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+  .calc-c{background:var(--bg3);border-radius:var(--radius);padding:10px 12px;}
+  .calc-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px;}
+  .calc-val{font-size:15px;font-weight:700;}
 
-  /* Month table */
-  .month-row { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
-  .month-row:last-child { border-bottom: none; }
-  .month-name { font-size: 12px; color: var(--text3); width: 52px; flex-shrink: 0; }
-  .month-bar { flex: 1; height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
-  .month-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
-  .month-bal { font-size: 13px; font-weight: 700; width: 68px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-  .month-flag { font-size: 11px; width: 36px; text-align: right; flex-shrink: 0; }
+  .sl-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .sl-lbl{font-size:12px;color:var(--text2);width:150px;flex-shrink:0;}
+  .sl-row input[type=range]{flex:1;-webkit-appearance:none;height:4px;background:var(--bg4);border-radius:2px;outline:none;cursor:pointer;}
+  .sl-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--green);cursor:pointer;}
+  .sl-val{font-size:12px;font-weight:600;min-width:48px;text-align:right;}
 
-  /* Alarms */
-  .alarm-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-  .alarm-row:last-child { border-bottom: none; }
-  .alarm-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .alarm-par { font-size: 13px; font-weight: 700; color: var(--text); width: 100px; flex-shrink: 0; }
-  .alarm-price { font-size: 12px; color: var(--text2); flex: 1; }
-  .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  /* Month */
+  .mo-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .mo-row:last-child{border-bottom:none;}
+  .mo-name{font-size:12px;color:var(--text3);width:48px;flex-shrink:0;}
+  .mo-bar{flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+  .mo-fill{height:100%;border-radius:3px;transition:width 0.5s;}
+  .mo-bal{font-size:12px;font-weight:700;width:62px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums;}
+  .mo-flag{font-size:11px;width:32px;text-align:right;flex-shrink:0;}
 
   /* Diary */
-  .diary-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-  .diary-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-  .field-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-  .field-input { width: 100%; padding: 8px 10px; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text); font-size: 13px; font-family: inherit; outline: none; transition: border-color 0.15s; }
-  .field-input:focus { border-color: var(--green); }
-  textarea.field-input { resize: vertical; min-height: 60px; }
+  .fl{display:flex;flex-direction:column;gap:3px;margin-bottom:8px;}
+  .fl-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;}
+  .fi{width:100%;padding:7px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:12px;font-family:inherit;outline:none;transition:border-color 0.15s;}
+  .fi:focus{border-color:var(--green);}
+  textarea.fi{resize:vertical;min-height:52px;}
+  .de{padding:10px 0;border-bottom:1px solid var(--border);}
+  .de:last-child{border-bottom:none;}
+  .de-hdr{display:flex;justify-content:space-between;margin-bottom:2px;}
+  .de-par{font-size:12px;font-weight:700;}
+  .de-meta{font-size:11px;color:var(--text3);}
 
-  /* Rule list */
-  .rule-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
-  .rule-row:last-child { border-bottom: none; }
-  .rule-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-  .rule-text { flex: 1; font-size: 13px; color: var(--text2); line-height: 1.5; }
-  .rule-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  /* Rules */
+  .rule-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start;}
+  .rule-row:last-child{border-bottom:none;}
+  .rn{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;}
+  .rt{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+  .rs{font-size:11px;color:var(--text2);line-height:1.5;}
 
-  /* Process steps */
-  .process-step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
-  .process-step:last-child { border-bottom: none; }
-  .ps-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-  .ps-body { flex: 1; }
-  .ps-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .ps-sub { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  /* Process */
+  .ps{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+  .ps:last-child{border-bottom:none;}
+  .ps-n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+  .ps-t{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+  .ps-s{font-size:11px;color:var(--text2);line-height:1.5;}
 
-  /* Buttons */
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid; transition: all 0.15s; font-family: inherit; }
-  .btn-green { background: var(--green-bg); color: var(--green); border-color: rgba(29,184,122,0.3); }
-  .btn-green:hover { background: var(--green); color: #000; }
-  .btn-ghost { background: transparent; color: var(--text2); border-color: var(--border2); }
-  .btn-ghost:hover { background: var(--bg3); color: var(--text); }
-  .btn-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;border:1px solid;transition:all 0.15s;font-family:inherit;}
+  .btn-g{background:var(--green-bg);color:var(--green);border-color:rgba(29,184,122,0.3);}
+  .btn-g:hover{background:var(--green);color:#000;}
+  .btn-ghost{background:transparent;color:var(--text2);border-color:var(--border2);}
+  .btn-ghost:hover{background:var(--bg3);color:var(--text);}
+  .btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
 
-  /* Info strip */
-  .info-strip { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius); margin-bottom: 8px; font-size: 12px; border: 1px solid; }
-  .info-strip.green { background: var(--green-bg); color: var(--green); border-color: rgba(29,184,122,0.2); }
-  .info-strip.red { background: var(--red-bg); color: var(--red); border-color: rgba(226,75,74,0.2); }
-  .info-strip.amber { background: var(--amber-bg); color: var(--amber); border-color: rgba(240,160,48,0.2); }
-  .info-strip.blue { background: var(--blue-bg); color: var(--blue); border-color: rgba(61,142,240,0.2); }
+  .info{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-radius:var(--radius);margin-bottom:8px;font-size:12px;border:1px solid;line-height:1.5;}
+  .info.g{background:var(--green-bg);color:var(--green);border-color:rgba(29,184,122,0.2);}
+  .info.r{background:var(--red-bg);color:var(--red);border-color:rgba(226,75,74,0.2);}
+  .info.a{background:var(--amber-bg);color:var(--amber);border-color:rgba(240,160,48,0.2);}
+  .info.b{background:var(--blue-bg);color:var(--blue);border-color:rgba(61,142,240,0.2);}
 
-  /* Diary log */
-  .diary-entry { padding: 10px 0; border-bottom: 1px solid var(--border); }
-  .diary-entry:last-child { border-bottom: none; }
-  .de-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
-  .de-par { font-size: 13px; font-weight: 700; color: var(--text); }
-  .de-result { font-size: 12px; font-weight: 700; }
-  .de-meta { font-size: 11px; color: var(--text3); }
+  .empty{text-align:center;padding:28px;color:var(--text3);font-size:12px;}
+  .divider{height:1px;background:var(--border);margin:14px 0;}
 
-  /* Divider */
-  .divider { height: 1px; background: var(--border); margin: 16px 0; }
-
-  /* Empty state */
-  .empty { text-align: center; padding: 32px 16px; color: var(--text3); font-size: 13px; }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .main { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-    .calc-grid { grid-template-columns: 1fr 1fr; }
+  @media(max-width:700px){
+    .main{grid-template-columns:1fr;}
+    .sidebar{display:none;}
+    .mg4{grid-template-columns:repeat(2,1fr);}
+    .mg3{grid-template-columns:1fr 1fr;}
+    .calc-g{grid-template-columns:1fr 1fr;}
+    .wl-row{grid-template-columns:80px 60px 60px 1fr;}
+    .tool-grid{grid-template-columns:1fr;}
   }
 </style>
 </head>
 <body>
 
 <header class="header">
-  <div class="header-left">
+  <div style="display:flex;align-items:center;gap:12px;">
     <div class="logo">Trading<span>Cockpit</span></div>
-    <div class="header-chips">
-      <span class="chip chip-green" id="hd-balance">$90</span>
-      <span class="chip chip-amber" id="hd-meta">Meta: ~49%/mês</span>
-      <span class="chip chip-blue">Dez/26</span>
+    <div class="hchips">
+      <span class="chip chip-g" id="hd-bal">$90</span>
+      <span class="chip chip-a" id="hd-meta">49%/mês</span>
+      <span class="chip chip-b">Dez/26 · $1.000</span>
+      <span class="chip chip-r" id="hd-session">Fora de sessão</span>
     </div>
   </div>
-  <div class="header-time" id="hd-time">--:--:-- UTC</div>
+  <div class="htime" id="hd-time">--:-- UTC</div>
 </header>
 
 <div class="main">
-  <nav class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Análise</div>
-      <div class="nav-item active" onclick="showPanel('pre')">
-        <span class="icon">◎</span> Pré-trade
+<nav class="sidebar">
+  <div class="slbl">Análise</div>
+  <div class="nav active" onclick="show('pre',this)"><span class="ic">◎</span> Pré-trade</div>
+  <div class="nav" onclick="show('watch',this)"><span class="ic">◈</span> Watchlist</div>
+  <div class="nav" onclick="show('alarm',this)"><span class="ic">◆</span> Alarme único</div>
+  <div class="nav" onclick="show('tools',this)"><span class="ic">◇</span> Ferramentas</div>
+  <div class="slbl">Gestão</div>
+  <div class="nav" onclick="show('metas',this)"><span class="ic">◇</span> Metas</div>
+  <div class="nav" onclick="show('diario',this)"><span class="ic">◻</span> Diário</div>
+  <div class="slbl">Sistema</div>
+  <div class="nav" onclick="show('regras',this)"><span class="ic">◆</span> Regras</div>
+  <div class="nav" onclick="show('processo',this)"><span class="ic">◈</span> Processo 4h</div>
+
+  <div class="sb-box">
+    <div class="sb-row"><span class="sb-lbl">Balance</span><span class="sb-val cg" id="sb-bal">$90</span></div>
+    <div class="sb-row"><span class="sb-lbl">Alvo</span><span class="sb-val" style="color:var(--text2)">$1.000</span></div>
+    <div class="sb-row"><span class="sb-lbl">Progresso</span><span class="sb-val ca" id="sb-pct">9%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="sb-prog" style="width:9%"></div></div>
+  </div>
+</nav>
+
+<main class="content">
+
+<!-- PRÉ-TRADE -->
+<div id="panel-pre" class="panel active">
+  <div class="mg4">
+    <div class="mc"><div class="mc-lbl">Balance</div><div class="mc-val cg" id="p-bal-disp">$90</div><div class="mc-sub">capital atual</div></div>
+    <div class="mc"><div class="mc-lbl">Score</div><div class="mc-val cp" id="p-score-disp">0/100</div><div class="mc-sub" id="p-tier-sub">sem critérios</div></div>
+    <div class="mc"><div class="mc-lbl">R:R</div><div class="mc-val ca" id="p-rr">1:1.8</div><div class="mc-sub" id="p-bewr">mín EV+: 35.7%</div></div>
+    <div class="mc"><div class="mc-lbl">Risco $</div><div class="mc-val cr" id="p-riskusd">$0</div><div class="mc-sub" id="p-lev">aguardando</div></div>
+  </div>
+
+  <div class="stitle">Parâmetros</div>
+  <div class="card">
+    <div class="sl-row"><span class="sl-lbl">Balance atual (USD)</span><input type="range" id="r-bal" min="50" max="1000" step="1" value="90" oninput="calc()"><span class="sl-val" id="o-bal">$90</span></div>
+    <div class="sl-row"><span class="sl-lbl">Stop loss (%)</span><input type="range" id="r-sl" min="1" max="10" step="0.5" value="5" oninput="calc()"><span class="sl-val" id="o-sl">5%</span></div>
+    <div class="sl-row"><span class="sl-lbl">Take profit (%)</span><input type="range" id="r-tp" min="3" max="30" step="0.5" value="9" oninput="calc()"><span class="sl-val" id="o-tp">9%</span></div>
+  </div>
+
+  <div class="stitle">Checklist SMC + Confirmações</div>
+  <div class="card" id="chk-cont"></div>
+
+  <div class="score-wrap">
+    <div class="score-hdr">
+      <span style="font-size:11px;color:var(--text2)">Convicção do setup</span>
+      <span style="font-size:13px;font-weight:700" id="score-lbl">0 / 100</span>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="score-fill" style="width:0%;background:var(--text3)"></div></div>
+    <div class="score-ticks"><span>Não operar</span><span>D·25</span><span>C·45</span><span>B·65</span><span>A·80</span></div>
+  </div>
+
+  <div class="verdict" id="verdict" style="border-color:var(--border);background:var(--bg3)">
+    <div class="v-tier" id="v-tier" style="color:var(--text2)">Selecione os critérios do setup</div>
+    <div class="v-msg" id="v-msg">Marque o que o trade tem para receber tier, alavancagem e exposição.</div>
+  </div>
+
+  <div class="calc-g" id="calc-g" style="display:none">
+    <div class="calc-c"><div class="calc-lbl">Exposição total</div><div class="calc-val cb" id="c-exp">—</div></div>
+    <div class="calc-c"><div class="calc-lbl">Ganho TP</div><div class="calc-val cg" id="c-gain">—</div></div>
+    <div class="calc-c"><div class="calc-lbl">Perda SL</div><div class="calc-val cr" id="c-loss">—</div></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="resetChk()">Limpar checklist</button>
+  </div>
+</div>
+
+<!-- WATCHLIST -->
+<div id="panel-watch" class="panel">
+  <div class="info b">Cabeças de chave monitoradas via TradingView + Bybit · Atualiza manualmente após sua leitura diária</div>
+  <div class="stitle">Pares principais</div>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:100px 75px 65px 1fr 95px;gap:8px;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:2px;">
+      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Par</span>
+      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Bias D</span>
+      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Bias 4H</span>
+      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Observação</span>
+      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;text-align:right;">Status</span>
+    </div>
+    <div id="wl-body">
+      <div class="wl-row">
+        <span class="wl-par">BTCUSDT.P</span>
+        <span class="wl-bias bias-neut">NEUTRO</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-note">Líder — define o viés do mercado</span>
+        <span class="wl-action" style="color:var(--text3)">Dominance</span>
       </div>
-      <div class="nav-item" onclick="showPanel('alarmes')">
-        <span class="icon">◈</span> Alarmes
+      <div class="wl-row">
+        <span class="wl-par">ETHUSDT.P</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-note">Confirma força altcoin season</span>
+        <span class="wl-action" style="color:var(--text3)">Aguardar</span>
+      </div>
+      <div class="wl-row">
+        <span class="wl-par">BNBUSDT.P</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-note">Proxy de sentiment BSC/BNB chain</span>
+        <span class="wl-action" style="color:var(--text3)">Aguardar</span>
+      </div>
+      <div class="wl-row">
+        <span class="wl-par">SOLUSDT.P</span>
+        <span class="wl-bias bias-bear">BEARISH</span>
+        <span class="wl-bias bias-bull">BULLISH</span>
+        <span class="wl-note">Long ativo $73,22 → TP $79,90</span>
+        <span class="wl-action cg">LONG ABERTO</span>
+      </div>
+      <div class="wl-row">
+        <span class="wl-par">XRPUSDT.P</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-note">Alta sensibilidade a notícias SEC</span>
+        <span class="wl-action" style="color:var(--text3)">Aguardar</span>
+      </div>
+      <div class="wl-row">
+        <span class="wl-par">PAXGUSDT</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-bias bias-neut">—</span>
+        <span class="wl-note">Ouro · hedge quando crypto cai</span>
+        <span class="wl-action" style="color:var(--amber)">HEDGE</span>
       </div>
     </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Gestão</div>
-      <div class="nav-item" onclick="showPanel('metas')">
-        <span class="icon">◇</span> Metas mensais
+  </div>
+  <div class="stitle">Atualizar bias</div>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 2fr;gap:8px;margin-bottom:8px;">
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px;">Par</div>
+        <select class="fi" id="wb-par" style="width:100%">
+          <option>BTCUSDT.P</option><option>ETHUSDT.P</option><option>BNBUSDT.P</option>
+          <option selected>SOLUSDT.P</option><option>XRPUSDT.P</option><option>PAXGUSDT</option>
+        </select>
       </div>
-      <div class="nav-item" onclick="showPanel('diario')">
-        <span class="icon">◻</span> Diário
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px;">Bias D</div>
+        <select class="fi" id="wb-d" style="width:100%"><option>BULLISH</option><option>BEARISH</option><option selected>NEUTRO</option></select>
       </div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px;">Bias 4H</div>
+        <select class="fi" id="wb-4h" style="width:100%"><option>BULLISH</option><option>BEARISH</option><option selected>NEUTRO</option></select>
+      </div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px;">Observação</div>
+        <input class="fi" id="wb-note" placeholder="OB tocado, FVG aberto, sweep..."></div>
     </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Sistema</div>
-      <div class="nav-item" onclick="showPanel('regras')">
-        <span class="icon">◆</span> Regras
-      </div>
-      <div class="nav-item" onclick="showPanel('processo')">
-        <span class="icon">◈</span> Processo diário
-      </div>
+    <button class="btn btn-g" onclick="updateWl()">Atualizar watchlist</button>
+  </div>
+</div>
+
+<!-- ALARME ÚNICO -->
+<div id="panel-alarm" class="panel">
+  <div class="info a">TradingView free = 1 alarme ativo. Use este painel para decidir qual o alarme mais crítico agora e as alternativas gratuitas.</div>
+
+  <div class="stitle">Alarme ativo agora — SOL long</div>
+  <div class="card">
+    <div class="alarm-priority" style="background:var(--amber-bg);border-color:rgba(240,160,48,0.3);">
+      <div class="ap-dot" style="background:var(--amber)"></div>
+      <span class="ap-par" style="color:var(--amber);font-weight:700;">SOLUSDT.P</span>
+      <span class="ap-price">Alarme em: <strong style="color:var(--amber)">$76,00</strong></span>
+      <span class="ap-why">T1 atingido → realizar 30% + mover stop para BE ($73,22)</span>
+      <span class="badge" style="background:var(--amber-bg);color:var(--amber);">ATIVO</span>
     </div>
+    <div style="font-size:11px;color:var(--text2);padding:8px 0;">Quando disparar: abrir a Bybit, realizar 30% da posição, mover stop para $73,22. Depois setar novo alarme em $79,90 (T2).</div>
+  </div>
 
-    <div class="sidebar-stats">
-      <div class="ss-row">
-        <span class="ss-label">Balance</span>
-        <span class="ss-val col-green" id="sb-bal">$90</span>
-      </div>
-      <div class="ss-row">
-        <span class="ss-label">Alvo</span>
-        <span class="ss-val" style="color:var(--text2);">$1.000</span>
-      </div>
-      <div class="ss-row">
-        <span class="ss-label">Progresso</span>
-        <span class="ss-val col-amber" id="sb-pct">9%</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="sb-prog" style="width:9%;"></div>
-      </div>
+  <div class="stitle">Fila de alarmes — ordem de prioridade</div>
+  <div class="card" id="alarm-queue">
+    <div class="alarm-priority" style="background:var(--green-bg);border-color:rgba(29,184,122,0.2);">
+      <div class="ap-dot" style="background:var(--green)"></div>
+      <span class="ap-par">SOL T2</span>
+      <span class="ap-price">$79,90</span>
+      <span class="ap-why">Realizar 50% restante · setar runner $84</span>
+      <span class="badge" style="background:var(--bg3);color:var(--text3);">NA FILA</span>
     </div>
-  </nav>
-
-  <main class="content">
-
-    <!-- PRÉ-TRADE -->
-    <div id="panel-pre" class="panel active">
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">Balance</div>
-          <div class="metric-value col-green" id="m-bal-disp">$90</div>
-          <div class="metric-sub">capital disponível</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Score</div>
-          <div class="metric-value col-purple" id="m-score">0/100</div>
-          <div class="metric-sub" id="m-tier-sub">sem critérios</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">R:R do setup</div>
-          <div class="metric-value" id="m-rr" style="color:var(--amber);">1:1.8</div>
-          <div class="metric-sub" id="m-bewr">win rate mín: 35.7%</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Risco em $</div>
-          <div class="metric-value col-red" id="m-riskusd">$0</div>
-          <div class="metric-sub" id="m-tier-disp">aguardando</div>
-        </div>
-      </div>
-
-      <div class="section-title">Parâmetros do trade</div>
-      <div class="card">
-        <div class="slider-row">
-          <span class="slider-label">Balance atual (USD)</span>
-          <input type="range" id="r-bal" min="50" max="1000" step="1" value="90" oninput="calc()">
-          <span class="slider-val" id="o-bal">$90</span>
-        </div>
-        <div class="slider-row">
-          <span class="slider-label">Stop loss (%)</span>
-          <input type="range" id="r-sl" min="1" max="10" step="0.5" value="5" oninput="calc()">
-          <span class="slider-val" id="o-sl">5%</span>
-        </div>
-        <div class="slider-row">
-          <span class="slider-label">Take profit (%)</span>
-          <input type="range" id="r-tp" min="3" max="30" step="0.5" value="9" oninput="calc()">
-          <span class="slider-val" id="o-tp">9%</span>
-        </div>
-      </div>
-
-      <div class="section-title">Checklist de confluência SMC</div>
-      <div class="card" id="chk-container"></div>
-
-      <div class="score-display">
-        <div class="score-header">
-          <span style="font-size:12px; color:var(--text2);">Convicção do setup</span>
-          <span style="font-size:14px; font-weight:700;" id="score-label">0 / 100</span>
-        </div>
-        <div class="score-bar">
-          <div class="score-fill" id="score-fill" style="width:0%; background:var(--text3);"></div>
-        </div>
-        <div class="score-ticks">
-          <span>Não operar</span><span>D (25)</span><span>C (45)</span><span>B (65)</span><span>A (80)</span>
-        </div>
-      </div>
-
-      <div class="verdict-box" id="verdict-box" style="border-color:var(--border); background:var(--bg3);">
-        <div class="verdict-tier" id="verdict-tier" style="color:var(--text2);">Selecione os critérios do setup</div>
-        <div class="verdict-msg" id="verdict-msg" style="color:var(--text3);">Marque o que o trade tem para receber o veredito.</div>
-      </div>
-
-      <div class="calc-grid" id="calc-grid" style="display:none;">
-        <div class="calc-cell">
-          <div class="calc-label">Exposição total</div>
-          <div class="calc-val col-blue" id="c-exp">—</div>
-        </div>
-        <div class="calc-cell">
-          <div class="calc-label">Ganho potencial (TP)</div>
-          <div class="calc-val col-green" id="c-gain">—</div>
-        </div>
-        <div class="calc-cell">
-          <div class="calc-label">Perda máxima (SL)</div>
-          <div class="calc-val col-red" id="c-loss">—</div>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-ghost" onclick="resetChk()">Limpar checklist</button>
-      </div>
+    <div class="alarm-priority" style="background:var(--red-bg);border-color:rgba(226,75,74,0.2);">
+      <div class="ap-dot" style="background:var(--red)"></div>
+      <span class="ap-par">SOL SL</span>
+      <span class="ap-price">$70,00</span>
+      <span class="ap-why">Zona de alerta antes do stop $69,56</span>
+      <span class="badge" style="background:var(--bg3);color:var(--text3);">NA FILA</span>
     </div>
+  </div>
 
-    <!-- METAS -->
-    <div id="panel-metas" class="panel">
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">Início</div>
-          <div class="metric-value" id="meta-start">$90</div>
-          <div class="metric-sub">jun/26</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Alvo</div>
-          <div class="metric-value col-green">$1.000</div>
-          <div class="metric-sub">dez/26</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Meses</div>
-          <div class="metric-value col-blue">6</div>
-          <div class="metric-sub">restantes</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Meta/mês</div>
-          <div class="metric-value col-amber" id="meta-need">49%</div>
-          <div class="metric-sub">crescimento composto</div>
-        </div>
-      </div>
-      <div class="section-title">Simular crescimento</div>
-      <div class="card">
-        <div class="slider-row">
-          <span class="slider-label">Balance atual (USD)</span>
-          <input type="range" id="meta-bal" min="50" max="500" step="1" value="90" oninput="calcMetas()">
-          <span class="slider-val" id="meta-bal-out">$90</span>
-        </div>
-        <div class="slider-row">
-          <span class="slider-label">Ganho líquido/mês (%)</span>
-          <input type="range" id="meta-pct" min="10" max="90" step="1" value="49" oninput="calcMetas()">
-          <span class="slider-val" id="meta-pct-out">49%</span>
-        </div>
-      </div>
-      <div class="section-title">Projeção mês a mês</div>
-      <div class="card" id="meta-table"></div>
-      <div class="card" id="meta-warning" style="font-size:12px; color:var(--text2);"></div>
+  <div class="stitle">Alternativas gratuitas de alarme</div>
+  <div class="card">
+    <div class="ps">
+      <div class="ps-n" style="background:var(--blue-bg);color:var(--blue)">1</div>
+      <div><div class="ps-t">CoinGlass — Liquidation heatmap</div><div class="ps-s">Mostra onde estão as liquidações em massa. Quando o preço se aproxima de uma zona densa de liquidações, isso é o próximo gatilho. Não precisa de alarme — você vê visualmente. <a href="https://www.coinglass.com/pt" target="_blank" style="color:var(--blue)">coinglass.com</a></div></div>
     </div>
-
-    <!-- ALARMES -->
-    <div id="panel-alarmes" class="panel">
-      <div class="section-title">Pares monitorados</div>
-      <div class="card" id="alarm-container">
-        <div class="alarm-row">
-          <div class="alarm-dot" style="background:var(--green);"></div>
-          <span class="alarm-par">SOLUSDT</span>
-          <span class="alarm-price">$76,00 (T1) · $70,00 (alerta) · $69,56 (SL)</span>
-          <span class="badge" style="background:var(--green-bg);color:var(--green);">LONG ATIVO</span>
-        </div>
-        <div class="alarm-row">
-          <div class="alarm-dot" style="background:var(--amber);"></div>
-          <span class="alarm-par">PAXGUSDT</span>
-          <span class="alarm-price">Aguardando OB diário — hedge potential</span>
-          <span class="badge" style="background:var(--amber-bg);color:var(--amber);">MONITORAR</span>
-        </div>
-        <div class="alarm-row">
-          <div class="alarm-dot" style="background:var(--text3);"></div>
-          <span class="alarm-par">BTCUSDT</span>
-          <span class="alarm-price">Sem setup confirmado</span>
-          <span class="badge" style="background:var(--bg3);color:var(--text3);">AGUARDAR</span>
-        </div>
-        <div class="alarm-row">
-          <div class="alarm-dot" style="background:var(--text3);"></div>
-          <span class="alarm-par">ETHUSDT</span>
-          <span class="alarm-price">Sem setup confirmado</span>
-          <span class="badge" style="background:var(--bg3);color:var(--text3);">AGUARDAR</span>
-        </div>
-      </div>
-      <div class="section-title">Adicionar alarme</div>
-      <div class="card">
-        <div style="display:grid; grid-template-columns:1fr 1fr 2fr; gap:10px; margin-bottom:10px;">
-          <div><div class="field-label">Par</div><input class="field-input" id="al-par" placeholder="SOLUSDT"></div>
-          <div><div class="field-label">Preço</div><input class="field-input" type="number" id="al-price" placeholder="0.00"></div>
-          <div><div class="field-label">Motivo / ação</div><input class="field-input" id="al-reason" placeholder="ex: testa +OB 30min — avaliar long"></div>
-        </div>
-        <button class="btn btn-green" onclick="addAlarm()">+ Adicionar alarme</button>
-      </div>
+    <div class="ps">
+      <div class="ps-n" style="background:var(--purple-bg);color:var(--purple)">2</div>
+      <div><div class="ps-t">Crypto Bubbles — Scan de volume 1H</div><div class="ps-s">Abre no timeframe 1H. Qualquer bolha que ficou verde >5% em 1H é candidato imediato para análise no TradingView. Substitui alarme de "movimento inesperado". <a href="https://cryptobubbles.net" target="_blank" style="color:var(--purple)">cryptobubbles.net</a></div></div>
     </div>
-
-    <!-- DIÁRIO -->
-    <div id="panel-diario" class="panel">
-      <div class="section-title">Registrar trade</div>
-      <div class="card">
-        <div class="diary-grid2">
-          <div><div class="field-label">Par</div><input class="field-input" id="d-par" placeholder="SOLUSDT"></div>
-          <div><div class="field-label">Data</div><input class="field-input" id="d-date" placeholder="21/06/2026"></div>
-        </div>
-        <div class="diary-grid3">
-          <div><div class="field-label">Entrada</div><input class="field-input" type="number" id="d-entry" placeholder="73.22"></div>
-          <div><div class="field-label">Stop</div><input class="field-input" type="number" id="d-sl" placeholder="69.56"></div>
-          <div><div class="field-label">Alvo</div><input class="field-input" type="number" id="d-tp" placeholder="79.90"></div>
-        </div>
-        <div class="diary-grid2">
-          <div><div class="field-label">Score do setup</div><input class="field-input" id="d-score" placeholder="45 pts — Tier C"></div>
-          <div><div class="field-label">Resultado</div><input class="field-input" id="d-result" placeholder="+$XX.XX ou -$XX.XX"></div>
-        </div>
-        <div style="margin-bottom:10px;"><div class="field-label">Lógica da entrada</div><textarea class="field-input" id="d-logic" placeholder="O que você viu: OB, sweep, FVG, divergência, fibonacci..."></textarea></div>
-        <div><div class="field-label">Aprendizado</div><textarea class="field-input" id="d-learn" placeholder="O que o mercado fez, se seguiu o plano, o que faria diferente..."></textarea></div>
-        <div class="btn-row">
-          <button class="btn btn-green" onclick="saveDiary()">Salvar trade</button>
-          <button class="btn btn-ghost" onclick="clearDiary()">Limpar</button>
-        </div>
-        <div id="d-saved" style="display:none; margin-top:8px; font-size:12px; color:var(--green);">✓ Trade salvo</div>
-      </div>
-      <div class="section-title">Histórico desta sessão</div>
-      <div class="card" id="diary-log"><div class="empty">Nenhum trade registrado ainda nesta sessão.</div></div>
+    <div class="ps">
+      <div class="ps-n" style="background:var(--amber-bg);color:var(--amber)">3</div>
+      <div><div class="ps-t">Bybit — Alarme de preço nativo</div><div class="ps-s">A própria Bybit tem alertas de preço ilimitados no app. Configura lá para os níveis que o TradingView não cobre. Vai direto para a execução quando disparar.</div></div>
     </div>
-
-    <!-- REGRAS -->
-    <div id="panel-regras" class="panel">
-      <div class="info-strip green">Sistema de regras — leia antes de cada sessão de trading</div>
-      <div class="section-title">Regras de entrada</div>
-      <div class="card">
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--red-bg); color:var(--red);">1</div>
-          <div><div class="rule-title">Score mínimo 45 pts para entrar</div><div class="rule-text">Abaixo de 45 é Tier D ou sem trade. Assiste, aprende, mas não entra. Sem exceção — nem quando "parece óbvio".</div></div>
-        </div>
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--red-bg); color:var(--red);">2</div>
-          <div><div class="rule-title">R:R mínimo 1:1,5 — ideal 1:2+</div><div class="rule-text">Abaixo de 1:1,5 a matemática não favorece no longo prazo. Rejeita o setup independente da "certeza" emocional.</div></div>
-        </div>
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--red-bg); color:var(--red);">3</div>
-          <div><div class="rule-title">Máximo 2 trades simultâneos</div><div class="rule-text">Altcoins têm correlação alta. 3 longs simultâneos = 1 trade com 3× de risco disfarçado de diversificação.</div></div>
-        </div>
-      </div>
-      <div class="section-title">Regras de gestão</div>
-      <div class="card">
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--amber-bg); color:var(--amber);">4</div>
-          <div><div class="rule-title">Após T1: stop vai para breakeven</div><div class="rule-text">Quando o primeiro alvo parcial for atingido, o stop sobe para a entrada. Trade vira risco zero imediatamente.</div></div>
-        </div>
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--amber-bg); color:var(--amber);">5</div>
-          <div><div class="rule-title">2 stops seguidos → pausa de 5 dias</div><div class="rule-text">Dois stops indicam viés errado ou mercado desfavorável. Para, revisa os últimos trades, volta com clareza.</div></div>
-        </div>
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--amber-bg); color:var(--amber);">6</div>
-          <div><div class="rule-title">Drawdown mensal máximo de 20%</div><div class="rule-text">Se o balance cair 20% num mês, fecha tudo. O mercado está te ensinando algo — escuta antes de continuar.</div></div>
-        </div>
-      </div>
-      <div class="section-title">Regras de comportamento</div>
-      <div class="card">
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--green-bg); color:var(--green);">7</div>
-          <div><div class="rule-title">Todo trade entra no diário — sem exceção</div><div class="rule-text">Sem registro não tem evolução. Em 6 meses o diário vai mostrar seus padrões de erro que nenhum indicador mostra.</div></div>
-        </div>
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--green-bg); color:var(--green);">8</div>
-          <div><div class="rule-title">Sessão de entrada: Londres (08–12h UTC) ou NY (13–17h UTC)</div><div class="rule-text">Volume e liquidez reais. Sessão asiática tem armadilhas frequentes e spread alto em altcoins menores.</div></div>
-        </div>
-        <div class="rule-row">
-          <div class="rule-num" style="background:var(--green-bg); color:var(--green);">9</div>
-          <div><div class="rule-title">PAXG como hedge — não como trade especulativo</div><div class="rule-text">Ouro sobe quando cripto cai. Em momentos de correlação bearish generalizada no crypto, PAXG protege capital.</div></div>
-        </div>
-      </div>
+    <div class="ps">
+      <div class="ps-n" style="background:var(--green-bg);color:var(--green)">4</div>
+      <div><div class="ps-t">TradingView — Rotação de alarme</div><div class="ps-s">Estratégia: 1 alarme no gatilho mais iminente. Quando disparar, você já tem a fila acima e sabe qual setar em seguida. Processo, não tecnologia.</div></div>
     </div>
+  </div>
 
-    <!-- PROCESSO -->
-    <div id="panel-processo" class="panel">
-      <div class="info-strip blue">Processo diário — 4 horas estruturadas produzem mais que 12 horas reativas</div>
-      <div class="section-title">Rotina de análise (4h/dia)</div>
-      <div class="card">
-        <div class="process-step">
-          <div class="ps-num" style="background:var(--blue-bg); color:var(--blue);">1</div>
-          <div class="ps-body"><div class="ps-title">Contexto macro — 30min</div><div class="ps-sub">BTC dominance + estrutura diária dos pares monitorados. Define o viés do dia. Não entra em nada ainda — só observa e anota.</div></div>
-        </div>
-        <div class="process-step">
-          <div class="ps-num" style="background:var(--purple-bg); color:var(--purple);">2</div>
-          <div class="ps-body"><div class="ps-title">Scan de setups — 45min</div><div class="ps-sub">Varre todos os pares: crypto + PAXG. Procura OBs respeitados, FVGs abertos e sweeps recentes. Marca candidatos. Sem julgamento ainda.</div></div>
-        </div>
-        <div class="process-step">
-          <div class="ps-num" style="background:var(--amber-bg); color:var(--amber);">3</div>
-          <div class="ps-body"><div class="ps-title">Análise profunda dos candidatos — 1h</div><div class="ps-sub">Para cada candidato: checklist completo no Pré-trade, score, R:R, tamanho de posição. Score abaixo de 45? Descarta sem pena.</div></div>
-        </div>
-        <div class="process-step">
-          <div class="ps-num" style="background:var(--green-bg); color:var(--green);">4</div>
-          <div class="ps-body"><div class="ps-title">Seta alarmes e ordens limit — 15min</div><div class="ps-sub">Configura alertas no TradingView nos gatilhos de entrada exatos. Ordens limit no nível definido. Fecha o gráfico e vai viver.</div></div>
-        </div>
-        <div class="process-step">
-          <div class="ps-num" style="background:var(--red-bg); color:var(--red);">5</div>
-          <div class="ps-body"><div class="ps-title">Revisão de posições abertas — 30min (fim do dia)</div><div class="ps-sub">Checa se T1 foi atingido (mover stop para BE). Registra no diário. Não mexe em nada sem gatilho definido previamente.</div></div>
-        </div>
-      </div>
-      <div class="section-title">Checklist de sessão</div>
-      <div class="card" id="session-chk">
-        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Verificar bias macro (BTC + dominance)</span></div>
-        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Scan completo dos pares monitorados</span></div>
-        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Passar candidatos pelo checklist de score</span></div>
-        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Alarmes configurados no TradingView</span></div>
-        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Posições abertas revisadas (stop BE se necessário)</span></div>
-        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Trade do dia registrado no diário</span></div>
-      </div>
+  <div class="stitle">Adicionar à fila</div>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:90px 80px 1fr;gap:8px;margin-bottom:8px;">
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px;">Par</div><input class="fi" id="aq-par" placeholder="SOLUSDT"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px;">Preço</div><input class="fi" type="number" id="aq-price" placeholder="0.00"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px;">Ação quando disparar</div><input class="fi" id="aq-action" placeholder="ex: realizar 50%, mover stop..."></div>
     </div>
+    <button class="btn btn-g" onclick="addQueue()">+ Adicionar à fila</button>
+  </div>
+</div>
 
-  </main>
+<!-- FERRAMENTAS -->
+<div id="panel-tools" class="panel">
+  <div class="info b">Seu stack de ferramentas — como e quando usar cada uma no processo diário</div>
+
+  <div class="stitle">Leitura de mercado — ordem de uso</div>
+  <div class="tool-grid">
+    <a class="tool-card" href="https://cryptobubbles.net" target="_blank">
+      <div class="tc-name">Crypto Bubbles</div>
+      <div class="tc-use">1º passo do dia. Timeframe 1H ou D. Identifica moedas com volume anômalo — candidatos para análise no TradingView. Verde >5% em 1H = investigar.</div>
+      <span class="tc-tag" style="background:var(--amber-bg);color:var(--amber);">Scan de entrada</span>
+    </a>
+    <a class="tool-card" href="https://www.coinglass.com/pt" target="_blank">
+      <div class="tc-name">CoinGlass</div>
+      <div class="tc-use">Liquidation heatmap + Open Interest + Funding Rate. Zonas densas de liquidação = próximos alvos do mercado. Funding rate alto = mercado overextended.</div>
+      <span class="tc-tag" style="background:var(--red-bg);color:var(--red);">Liquidações · OI</span>
+    </a>
+    <a class="tool-card" href="https://defillama.com" target="_blank">
+      <div class="tc-name">DefiLlama</div>
+      <div class="tc-use">TVL por chain e protocolo. Quando TVL de uma chain sobe mas o token não acompanhou = acumulação silenciosa. Divergência TVL × preço é sinal de entrada.</div>
+      <span class="tc-tag" style="background:var(--purple-bg);color:var(--purple);">TVL · DeFi</span>
+    </a>
+    <a class="tool-card" href="https://www.coingecko.com/pt-br" target="_blank">
+      <div class="tc-name">CoinGecko</div>
+      <div class="tc-use">Volume 24h por categoria. Identifica narrativas quentes (AI tokens, RWA, L2). Se uma categoria cresce volume 3 dias seguidos = narrativa em formação.</div>
+      <span class="tc-tag" style="background:var(--blue-bg);color:var(--blue);">Categorias · Volume</span>
+    </a>
+    <a class="tool-card" href="https://coinmarketcap.com" target="_blank">
+      <div class="tc-name">CoinMarketCap</div>
+      <div class="tc-use">Market cap e dominance. BTC dominance caindo + altcoins subindo = altseason confirmando. Dominance subindo = risk-off, segurança em BTC/PAXG.</div>
+      <span class="tc-tag" style="background:var(--green-bg);color:var(--green);">Dominance · Cap</span>
+    </a>
+    <a class="tool-card" href="https://www.tradingview.com" target="_blank">
+      <div class="tc-name">TradingView + Bybit</div>
+      <div class="tc-use">Análise técnica final dos candidatos. SMC + Fibonacci + Bandas + RSI. Só chega aqui quem passou pelo filtro do Crypto Bubbles e CoinGlass.</div>
+      <span class="tc-tag" style="background:var(--text3 + '20');color:var(--text2);">Análise técnica</span>
+    </a>
+  </div>
+
+  <div class="stitle">Fluxo de decisão — como as ferramentas se conectam</div>
+  <div class="card">
+    <div class="ps"><div class="ps-n" style="background:var(--amber-bg);color:var(--amber)">1</div><div><div class="ps-t">Crypto Bubbles (1H) → candidatos com volume</div><div class="ps-s">Filtra o universo de centenas de moedas para 3–5 com movimento real. Economiza 80% do tempo de scan.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--red-bg);color:var(--red)">2</div><div><div class="ps-t">CoinGlass → liquidações + funding rate</div><div class="ps-s">Valida se o movimento tem combustível (OI crescendo) ou se é armadilha (funding rate extremo = reversão próxima).</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--purple-bg);color:var(--purple)">3</div><div><div class="ps-t">DefiLlama → contexto fundamentalista rápido</div><div class="ps-s">30 segundos: TVL do projeto crescendo? Token tem utility real? Filtra meme sem base de candidatos restantes.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--blue-bg);color:var(--blue)">4</div><div><div class="ps-t">TradingView → checklist SMC completo</div><div class="ps-s">Só aqui você abre o gráfico. OB, FVG, sweep, fibonacci, RSI. Score no pré-trade. Se ≥45 → calcula posição e entra.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--green-bg);color:var(--green)">5</div><div><div class="ps-t">Bybit → execução + alarme de preço</div><div class="ps-s">Ordem limit no nível exato. Alarme de preço no Bybit app para o nível que o TradingView não cobre. Fecha o gráfico.</div></div></div>
+  </div>
+</div>
+
+<!-- METAS -->
+<div id="panel-metas" class="panel">
+  <div class="mg4">
+    <div class="mc"><div class="mc-lbl">Início</div><div class="mc-val" id="mt-start">$90</div><div class="mc-sub">jun/26</div></div>
+    <div class="mc"><div class="mc-lbl">Alvo</div><div class="mc-val cg">$1.000</div><div class="mc-sub">dez/26</div></div>
+    <div class="mc"><div class="mc-lbl">Meses</div><div class="mc-val cb">6</div><div class="mc-sub">restantes</div></div>
+    <div class="mc"><div class="mc-lbl">Meta/mês</div><div class="mc-val ca" id="mt-need">49%</div><div class="mc-sub">composto</div></div>
+  </div>
+  <div class="stitle">Simular</div>
+  <div class="card">
+    <div class="sl-row"><span class="sl-lbl">Balance atual (USD)</span><input type="range" id="m-bal" min="50" max="500" step="1" value="90" oninput="calcMetas()"><span class="sl-val" id="m-bal-o">$90</span></div>
+    <div class="sl-row"><span class="sl-lbl">Ganho líquido/mês (%)</span><input type="range" id="m-pct" min="10" max="90" step="1" value="49" oninput="calcMetas()"><span class="sl-val" id="m-pct-o">49%</span></div>
+  </div>
+  <div class="stitle">Projeção mês a mês</div>
+  <div class="card" id="meta-tbl"></div>
+  <div style="padding:10px 14px;background:var(--bg3);border-radius:var(--radius);font-size:12px;color:var(--text2);margin-top:4px;" id="meta-warn"></div>
+</div>
+
+<!-- DIÁRIO -->
+<div id="panel-diario" class="panel">
+  <div class="stitle">Registrar trade</div>
+  <div class="card">
+    <div class="mg2">
+      <div class="fl"><div class="fl-lbl">Par</div><input class="fi" id="d-par" placeholder="SOLUSDT.P"></div>
+      <div class="fl"><div class="fl-lbl">Data</div><input class="fi" id="d-date" placeholder="21/06/2026"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div class="fl"><div class="fl-lbl">Entrada</div><input class="fi" type="number" id="d-entry" placeholder="73.22"></div>
+      <div class="fl"><div class="fl-lbl">Stop</div><input class="fi" type="number" id="d-sl" placeholder="69.56"></div>
+      <div class="fl"><div class="fl-lbl">Alvo</div><input class="fi" type="number" id="d-tp" placeholder="79.90"></div>
+      <div class="fl"><div class="fl-lbl">Score</div><input class="fi" id="d-score" placeholder="45 · Tier C"></div>
+    </div>
+    <div class="mg2" style="margin-bottom:8px;">
+      <div class="fl"><div class="fl-lbl">Ferramentas usadas</div><input class="fi" id="d-tools" placeholder="Bubbles, CoinGlass, TradingView..."></div>
+      <div class="fl"><div class="fl-lbl">Resultado</div><input class="fi" id="d-result" placeholder="+$XX ou -$XX"></div>
+    </div>
+    <div class="fl" style="margin-bottom:8px;"><div class="fl-lbl">Lógica da entrada (OB, sweep, FVG, Fib...)</div><textarea class="fi" id="d-logic"></textarea></div>
+    <div class="fl"><div class="fl-lbl">Aprendizado</div><textarea class="fi" id="d-learn"></textarea></div>
+    <div class="btn-row">
+      <button class="btn btn-g" onclick="saveDiary()">Salvar trade</button>
+      <button class="btn btn-ghost" onclick="clearDiary()">Limpar</button>
+    </div>
+    <div id="d-ok" style="display:none;margin-top:8px;font-size:12px;color:var(--green);">✓ Salvo</div>
+  </div>
+  <div class="stitle">Histórico desta sessão</div>
+  <div class="card" id="diary-log"><div class="empty">Nenhum trade registrado ainda.</div></div>
+</div>
+
+<!-- REGRAS -->
+<div id="panel-regras" class="panel">
+  <div class="info g">Leia antes de cada sessão — estas regras existem para o dia em que a emoção falar mais alto que o método.</div>
+  <div class="stitle">Entrada</div>
+  <div class="card">
+    <div class="rule-row"><div class="rn" style="background:var(--red-bg);color:var(--red)">1</div><div><div class="rt">Score mínimo 45 pts (Tier C)</div><div class="rs">Abaixo de 45 você assiste, aprende, mas não aperta o botão. Sem exceção — nem quando "parece óbvio".</div></div></div>
+    <div class="rule-row"><div class="rn" style="background:var(--red-bg);color:var(--red)">2</div><div><div class="rt">R:R mínimo 1:1,5 — ideal 1:2+</div><div class="rs">Abaixo de 1:1,5 a matemática não te favorece no longo prazo mesmo com win rate alto.</div></div></div>
+    <div class="rule-row"><div class="rn" style="background:var(--red-bg);color:var(--red)">3</div><div><div class="rt">Máximo 2 trades simultâneos</div><div class="rs">Altcoins têm correlação alta. 3 longs = 1 trade com 3× de risco disfarçado de diversificação.</div></div></div>
+    <div class="rule-row"><div class="rn" style="background:var(--red-bg);color:var(--red)">4</div><div><div class="rt">Sessão Londres (08–12h UTC) ou NY (13–17h UTC)</div><div class="rs">Volume real, spread justo. Asiática tem armadilhas frequentes em altcoins — evitar entradas novas.</div></div></div>
+  </div>
+  <div class="stitle">Gestão</div>
+  <div class="card">
+    <div class="rule-row"><div class="rn" style="background:var(--amber-bg);color:var(--amber)">5</div><div><div class="rt">Após T1 → stop para breakeven imediatamente</div><div class="rs">Sem hesitar. Trade vira risco zero. Você só pode ganhar a partir daí.</div></div></div>
+    <div class="rule-row"><div class="rn" style="background:var(--amber-bg);color:var(--amber)">6</div><div><div class="rt">2 stops seguidos → pausa de 5 dias</div><div class="rs">Mercado está te dizendo algo. Para, revisa o diário, volta com clareza — não com raiva.</div></div></div>
+    <div class="rule-row"><div class="rn" style="background:var(--amber-bg);color:var(--amber)">7</div><div><div class="rt">Drawdown mensal máximo 20%</div><div class="rs">Se o balance cair 20% num mês, fecha tudo e descansa até o próximo. Capital preservado > recuperação emocional.</div></div></div>
+  </div>
+  <div class="stitle">Comportamento</div>
+  <div class="card">
+    <div class="rule-row"><div class="rn" style="background:var(--green-bg);color:var(--green)">8</div><div><div class="rt">Todo trade entra no diário</div><div class="rs">Em 6 meses o diário vai mostrar seus padrões de erro reais. Nenhum indicador faz isso.</div></div></div>
+    <div class="rule-row"><div class="rn" style="background:var(--green-bg);color:var(--green)">9</div><div><div class="rt">PAXG como hedge — não como especulação</div><div class="rs">Quando o bias macro de BTC virar bearish, parte do capital vai para PAXG. Ouro protege durante correções crypto.</div></div></div>
+    <div class="rule-row"><div class="rn" style="background:var(--green-bg);color:var(--green)">10</div><div><div class="rt">1 alarme no TradingView = o mais iminente</div><div class="rs">Fila de alarmes no cockpit. Bybit app para os demais níveis. Processo disciplinado substitui múltiplos alarmes.</div></div></div>
+  </div>
+</div>
+
+<!-- PROCESSO 4H -->
+<div id="panel-processo" class="panel">
+  <div class="info b">4 horas estruturadas produzem mais resultado que 12 horas reativas na frente do gráfico.</div>
+  <div class="stitle">Rotina diária</div>
+  <div class="card">
+    <div class="ps"><div class="ps-n" style="background:var(--blue-bg);color:var(--blue)">1</div><div><div class="ps-t">Contexto macro · 20min · CMC + BTC dominance</div><div class="ps-s">BTC dominance subindo = risk-off, favorece PAXG. Dominance caindo = altseason, favorece altcoins. Define o viés do dia antes de abrir qualquer gráfico.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--amber-bg);color:var(--amber)">2</div><div><div class="ps-t">Scan de volume · 20min · Crypto Bubbles (1H)</div><div class="ps-s">Filtra candidatos com movimento real de volume. Verde >5% em 1H ou movimento no D = entra na lista de análise. Sem volume não tem setup.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--red-bg);color:var(--red)">3</div><div><div class="ps-t">Validação · 15min · CoinGlass</div><div class="ps-s">Para cada candidato: OI crescendo ou caindo? Funding rate neutro (<0.05%) ou extremo? Heatmap mostra próxima zona de liquidação = alvo potencial.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--purple-bg);color:var(--purple)">4</div><div><div class="ps-t">Contexto DeFi · 10min · DefiLlama (se altcoin)</div><div class="ps-s">TVL do projeto crescendo? Token tem utilidade além de especulação? 30 segundos por projeto. Filtra armadilhas de meme sem base.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--purple-bg);color:var(--purple)">5</div><div><div class="ps-t">Análise técnica · 1h · TradingView</div><div class="ps-s">Só aqui abre o gráfico dos candidatos que passaram nos filtros anteriores. Checklist SMC completo: OB, FVG, sweep, Fibonacci, RSI, Bandas. Score ≥45 → próxima etapa.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--green-bg);color:var(--green)">6</div><div><div class="ps-t">Execução · 15min · Bybit + Alarmes</div><div class="ps-s">Ordem limit no nível exato definido na análise. Alarme TradingView no gatilho mais iminente. Alarme Bybit nos demais. Fecha o gráfico — o trade trabalha por você.</div></div></div>
+    <div class="ps"><div class="ps-n" style="background:var(--green-bg);color:var(--green)">7</div><div><div class="ps-t">Revisão · 30min · Fim do dia</div><div class="ps-s">T1 atingido? Move stop para BE. Posição ainda válida? Anota no diário. Não mexe em nada sem gatilho definido previamente. Emocional fora da equação.</div></div></div>
+  </div>
+  <div class="stitle">Checklist de sessão</div>
+  <div class="card" id="sess-chk">
+    <div class="chk-item" onclick="togSess(this)"><div class="chk-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">BTC dominance verificado — viés do dia definido</span></div>
+    <div class="chk-item" onclick="togSess(this)"><div class="chk-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Crypto Bubbles 1H varrido — candidatos identificados</span></div>
+    <div class="chk-item" onclick="togSess(this)"><div class="chk-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">CoinGlass verificado — OI e funding rate dos candidatos</span></div>
+    <div class="chk-item" onclick="togSess(this)"><div class="chk-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Checklist SMC passado — score registrado</span></div>
+    <div class="chk-item" onclick="togSess(this)"><div class="chk-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Alarme TradingView configurado no gatilho prioritário</span></div>
+    <div class="chk-item" onclick="togSess(this)"><div class="chk-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Alarme Bybit configurado para níveis secundários</span></div>
+    <div class="chk-item" onclick="togSess(this)"><div class="chk-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Trade do dia registrado no diário</span></div>
+  </div>
+</div>
+
+</main>
 </div>
 
 <script>
-const CRITERIA = [
-  { id:'c1', label:'Alinhamento D + 4H + 30min na mesma direção', pts:20 },
-  { id:'c2', label:'Entrada em OB confirmado (tocado + rejeição visível)', pts:15 },
-  { id:'c3', label:'Sweep de liquidez antes da entrada', pts:15 },
-  { id:'c4', label:'FVG de suporte/resistência confluente com entrada', pts:10 },
-  { id:'c5', label:'R:R ≥ 1:2', pts:10 },
-  { id:'c6', label:'Volume confirmando reversão (spike na vela)', pts:10 },
-  { id:'c7', label:'Divergência no RSI ou oscilador (Bull/Bear hidden)', pts:10 },
-  { id:'c8', label:'Fibonacci 0.618–0.786 confluente com OB/FVG', pts:5 },
-  { id:'c9', label:'Bollinger Band: preço tocou banda externa + retorno', pts:5 },
+const CRITERIA=[
+  {id:'c1',label:'Alinhamento D + 4H + 30min na mesma direção',pts:20,src:'TradingView'},
+  {id:'c2',label:'Entrada em OB confirmado (tocado + rejeição visível)',pts:15,src:'TradingView'},
+  {id:'c3',label:'Sweep de liquidez antes da entrada',pts:15,src:'TradingView · CoinGlass'},
+  {id:'c4',label:'FVG confluente com a entrada',pts:10,src:'TradingView'},
+  {id:'c5',label:'R:R ≥ 1:2',pts:10,src:'Calculador'},
+  {id:'c6',label:'Volume confirmando reversão (spike na vela)',pts:10,src:'TradingView · Bubbles'},
+  {id:'c7',label:'Divergência RSI ou oscilador (Bull/Bear hidden)',pts:10,src:'TradingView'},
+  {id:'c8',label:'Fibonacci 0.618–0.786 confluente com OB/FVG',pts:5,src:'TradingView'},
+  {id:'c9',label:'Bollinger Band: toque na banda + retorno',pts:5,src:'TradingView'},
 ];
-const TIERS = [
-  { min:0,  max:24,  name:'Não operar',          color:'#555a6e', rPct:0,   lev:0,  msg:'Setup sem confluência suficiente. O mercado abre todo dia — aguarde um setup de qualidade.' },
-  { min:25, max:44,  name:'Tier D — Especulativo',color:'#e24b4a', rPct:2,   lev:5,  msg:'Poucos critérios. Risco mínimo (2%). Apenas para aprendizado com dinheiro real.' },
-  { min:45, max:64,  name:'Tier C — Médio',        color:'#f0a030', rPct:3.5, lev:8,  msg:'Confluência básica. Tamanho conservador (3.5%). Trade válido com disciplina.' },
-  { min:65, max:79,  name:'Tier B — Alta convicção',color:'#3d8ef0', rPct:5,   lev:11, msg:'Múltiplas confluências. Tamanho padrão (5%). Execute o plano sem alterações.' },
-  { min:80, max:100, name:'Tier A — Máxima convicção',color:'#1db87a', rPct:7, lev:15, msg:'Setup premium. Todas confluências presentes. Máxima exposição (7%).' },
+const TIERS=[
+  {min:0,max:24,name:'Não operar',color:'#555a6e',rPct:0,lev:0,msg:'Sem confluência suficiente. O mercado abre amanhã — paciência é posição.'},
+  {min:25,max:44,name:'Tier D — 2% risco',color:'#e24b4a',rPct:2,lev:5,msg:'Poucos critérios. Risco mínimo. Apenas para aprender execução com dinheiro real.'},
+  {min:45,max:64,name:'Tier C — 3.5% risco',color:'#f0a030',rPct:3.5,lev:8,msg:'Confluência básica. Tamanho conservador. Trade válido com disciplina total.'},
+  {min:65,max:79,name:'Tier B — 5% risco',color:'#3d8ef0',rPct:5,lev:11,msg:'Alta convicção. Tamanho padrão. Execute o plano sem alterações emocionais.'},
+  {min:80,max:100,name:'Tier A — 7% risco',color:'#1db87a',rPct:7,lev:15,msg:'Setup premium. Todas as confluências. Máxima exposição — execute sem hesitar.'},
 ];
+let checks={};
+CRITERIA.forEach(c=>checks[c.id]=false);
+let diaryLog=[];
 
-let checks = {};
-CRITERIA.forEach(c => checks[c.id] = false);
-let diaryEntries = [];
-let alarmList = [];
-
-function showPanel(id) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('panel-' + id).classList.add('active');
-  event.currentTarget.classList.add('active');
+function show(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(el) el.classList.add('active');
 }
 
-function buildChk() {
-  const cont = document.getElementById('chk-container');
-  cont.innerHTML = '';
-  CRITERIA.forEach(c => {
-    const div = document.createElement('div');
-    div.className = 'chk-item';
-    div.id = 'chki-' + c.id;
-    div.innerHTML = `<div class="chk-box" id="cb-${c.id}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text" id="ct-${c.id}">${c.label}</span><span class="chk-pts" id="cp-${c.id}">+${c.pts}</span>`;
-    div.addEventListener('click', () => { checks[c.id] = !checks[c.id]; calc(); });
-    cont.appendChild(div);
+function buildChk(){
+  const cont=document.getElementById('chk-cont');
+  cont.innerHTML='';
+  CRITERIA.forEach(c=>{
+    const d=document.createElement('div');
+    d.className='chk-item'; d.id='chi-'+c.id;
+    d.innerHTML=`<div class="chk-box" id="cb-${c.id}"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">${c.label}</span><span class="chk-src">${c.src}</span><span class="chk-pts" id="cp-${c.id}">+${c.pts}</span>`;
+    d.addEventListener('click',()=>{checks[c.id]=!checks[c.id];calc();});
+    cont.appendChild(d);
   });
 }
 
-function getTier(score) { return TIERS.find(t => score >= t.min && score <= t.max) || TIERS[0]; }
+function getTier(s){return TIERS.find(t=>s>=t.min&&s<=t.max)||TIERS[0];}
 
-function calc() {
-  const bal = parseFloat(document.getElementById('r-bal').value);
-  const sl = parseFloat(document.getElementById('r-sl').value);
-  const tp = parseFloat(document.getElementById('r-tp').value);
-  document.getElementById('o-bal').textContent = '$' + bal;
-  document.getElementById('o-sl').textContent = sl.toFixed(1) + '%';
-  document.getElementById('o-tp').textContent = tp.toFixed(1) + '%';
-  const rr = tp / sl;
-  const rrEl = document.getElementById('m-rr');
-  rrEl.textContent = '1:' + rr.toFixed(1);
-  rrEl.style.color = rr >= 2 ? '#1db87a' : rr >= 1.5 ? '#3d8ef0' : '#e24b4a';
-  document.getElementById('m-bewr').textContent = 'win rate mín: ' + (1/(1+rr)*100).toFixed(1) + '%';
-  document.getElementById('m-bal-disp').textContent = '$' + bal;
-  document.getElementById('sb-bal').textContent = '$' + bal;
-  const prog = Math.min(bal/1000*100, 100);
-  document.getElementById('sb-prog').style.width = prog + '%';
-  document.getElementById('sb-pct').textContent = prog.toFixed(0) + '%';
-  document.getElementById('hd-balance').textContent = '$' + bal;
+function calc(){
+  const bal=parseFloat(document.getElementById('r-bal').value);
+  const sl=parseFloat(document.getElementById('r-sl').value);
+  const tp=parseFloat(document.getElementById('r-tp').value);
+  document.getElementById('o-bal').textContent='$'+bal;
+  document.getElementById('o-sl').textContent=sl.toFixed(1)+'%';
+  document.getElementById('o-tp').textContent=tp.toFixed(1)+'%';
+  const rr=tp/sl;
+  const rrEl=document.getElementById('p-rr');
+  rrEl.textContent='1:'+rr.toFixed(1);
+  rrEl.className='mc-val '+(rr>=2?'cg':rr>=1.5?'cb':'cr');
+  document.getElementById('p-bewr').textContent='mín EV+: '+(1/(1+rr)*100).toFixed(1)+'%';
+  document.getElementById('p-bal-disp').textContent='$'+bal;
+  document.getElementById('sb-bal').textContent='$'+bal;
+  document.getElementById('hd-bal').textContent='$'+bal;
+  const prog=Math.min(bal/1000*100,100);
+  document.getElementById('sb-prog').style.width=prog+'%';
+  document.getElementById('sb-pct').textContent=prog.toFixed(0)+'%';
+  const needed=(Math.pow(1000/bal,1/6)-1)*100;
+  document.getElementById('hd-meta').textContent=needed.toFixed(0)+'%/mês';
 
-  const needed = (Math.pow(1000/bal, 1/6) - 1) * 100;
-  document.getElementById('hd-meta').textContent = 'Meta: ~' + needed.toFixed(0) + '%/mês';
-
-  CRITERIA.forEach(c => {
-    const on = checks[c.id];
-    document.getElementById('chki-' + c.id).classList.toggle('on', on);
-    document.getElementById('cb-' + c.id).classList.toggle('on', on);
+  CRITERIA.forEach(c=>{
+    const on=checks[c.id];
+    document.getElementById('chi-'+c.id).classList.toggle('on',on);
+    document.getElementById('cb-'+c.id).classList.toggle('on',on);
+    document.getElementById('cp-'+c.id).style.color=on?'#1db87a':'';
   });
 
-  const score = CRITERIA.reduce((s,c) => s + (checks[c.id] ? c.pts : 0), 0);
-  const tier = getTier(score);
-  document.getElementById('score-label').textContent = score + ' / 100';
-  document.getElementById('m-score').textContent = score + '/100';
-  document.getElementById('m-tier-sub').textContent = tier.name;
-  const fill = document.getElementById('score-fill');
-  fill.style.width = score + '%';
-  fill.style.background = tier.color;
+  const score=CRITERIA.reduce((s,c)=>s+(checks[c.id]?c.pts:0),0);
+  const tier=getTier(score);
+  document.getElementById('score-lbl').textContent=score+' / 100';
+  document.getElementById('p-score-disp').textContent=score+'/100';
+  document.getElementById('p-tier-sub').textContent=tier.name;
+  const fill=document.getElementById('score-fill');
+  fill.style.width=score+'%'; fill.style.background=tier.color;
+  const v=document.getElementById('verdict');
+  v.style.borderColor=tier.color; v.style.background=tier.color+'18';
+  document.getElementById('v-tier').textContent=tier.name;
+  document.getElementById('v-tier').style.color=tier.color;
+  document.getElementById('v-msg').textContent=tier.msg;
 
-  const vb = document.getElementById('verdict-box');
-  vb.style.borderColor = tier.color;
-  vb.style.background = tier.color + '15';
-  document.getElementById('verdict-tier').textContent = tier.name;
-  document.getElementById('verdict-tier').style.color = tier.color;
-  document.getElementById('verdict-msg').textContent = tier.msg;
-  document.getElementById('verdict-msg').style.color = '#8b90a0';
-
-  if (tier.rPct > 0) {
-    const rUsd = bal * tier.rPct / 100;
-    const exp = rUsd / (sl/100);
-    document.getElementById('m-riskusd').textContent = '-$' + rUsd.toFixed(2);
-    document.getElementById('m-tier-disp').textContent = tier.lev + '× · ' + tier.rPct + '% risco';
-    document.getElementById('calc-grid').style.display = 'grid';
-    document.getElementById('c-exp').textContent = '$' + exp.toFixed(2);
-    document.getElementById('c-gain').textContent = '+$' + (exp * tp/100).toFixed(2);
-    document.getElementById('c-loss').textContent = '-$' + (exp * sl/100).toFixed(2);
+  if(tier.rPct>0){
+    const rUsd=bal*tier.rPct/100;
+    const exp=rUsd/(sl/100);
+    document.getElementById('p-riskusd').textContent='-$'+rUsd.toFixed(2);
+    document.getElementById('p-lev').textContent=tier.lev+'× · '+tier.rPct+'% risco';
+    document.getElementById('calc-g').style.display='grid';
+    document.getElementById('c-exp').textContent='$'+exp.toFixed(2);
+    document.getElementById('c-gain').textContent='+$'+(exp*tp/100).toFixed(2);
+    document.getElementById('c-loss').textContent='-$'+(exp*sl/100).toFixed(2);
   } else {
-    document.getElementById('m-riskusd').textContent = '$0';
-    document.getElementById('m-tier-disp').textContent = 'aguardando score';
-    document.getElementById('calc-grid').style.display = 'none';
+    document.getElementById('p-riskusd').textContent='$0';
+    document.getElementById('p-lev').textContent='aguardando score';
+    document.getElementById('calc-g').style.display='none';
   }
 }
 
-function resetChk() { CRITERIA.forEach(c => checks[c.id] = false); calc(); }
+function resetChk(){CRITERIA.forEach(c=>checks[c.id]=false);calc();}
 
-function calcMetas() {
-  const bal = parseFloat(document.getElementById('meta-bal').value);
-  const pct = parseFloat(document.getElementById('meta-pct').value);
-  document.getElementById('meta-bal-out').textContent = '$' + bal;
-  document.getElementById('meta-pct-out').textContent = pct + '%';
-  document.getElementById('meta-start').textContent = '$' + bal;
-  const needed = (Math.pow(1000/bal,1/6)-1)*100;
-  document.getElementById('meta-need').textContent = needed.toFixed(1) + '%';
-  const months = ['Jul/26','Ago/26','Set/26','Out/26','Nov/26','Dez/26'];
-  const cont = document.getElementById('meta-table');
-  cont.innerHTML = '';
-  let b = bal;
-  months.forEach((m,i) => {
-    b = b * (1 + pct/100);
-    const prog = Math.min(b/1000*100, 100);
-    const color = b >= 1000 ? '#1db87a' : b >= 500 ? '#3d8ef0' : '#f0a030';
-    const hit = b >= 1000;
-    const div = document.createElement('div');
-    div.className = 'month-row';
-    div.innerHTML = `<span class="month-name">${m}</span><div class="month-bar"><div class="month-bar-fill" style="width:${prog.toFixed(0)}%;background:${color};"></div></div><span class="month-bal" style="color:${color};">$${Math.min(b,9999).toFixed(0)}</span><span class="month-flag" style="color:${color};">${hit ? '🎯' : '+'+pct+'%'}</span>`;
-    cont.appendChild(div);
-    if (hit && !cont.dataset.done) { cont.dataset.done = '1'; }
+function calcMetas(){
+  const bal=parseFloat(document.getElementById('m-bal').value);
+  const pct=parseFloat(document.getElementById('m-pct').value);
+  document.getElementById('m-bal-o').textContent='$'+bal;
+  document.getElementById('m-pct-o').textContent=pct+'%';
+  document.getElementById('mt-start').textContent='$'+bal;
+  const needed=(Math.pow(1000/bal,1/6)-1)*100;
+  document.getElementById('mt-need').textContent=needed.toFixed(1)+'%';
+  const months=['Jul/26','Ago/26','Set/26','Out/26','Nov/26','Dez/26'];
+  const cont=document.getElementById('meta-tbl'); cont.innerHTML='';
+  let b=bal;
+  months.forEach(m=>{
+    b=b*(1+pct/100);
+    const prog=Math.min(b/1000*100,100);
+    const color=b>=1000?'#1db87a':b>=500?'#3d8ef0':'#f0a030';
+    const d=document.createElement('div'); d.className='mo-row';
+    d.innerHTML=`<span class="mo-name">${m}</span><div class="mo-bar"><div class="mo-fill" style="width:${prog.toFixed(0)}%;background:${color}"></div></div><span class="mo-bal" style="color:${color}">$${Math.min(b,9999).toFixed(0)}</span><span class="mo-flag" style="color:${color}">${b>=1000?'🎯':'+'+pct+'%'}</span>`;
+    cont.appendChild(d);
   });
-  delete cont.dataset.done;
-  const final = bal * Math.pow(1+pct/100, 6);
-  const warn = document.getElementById('meta-warning');
-  warn.textContent = `Partindo de $${bal} com ${pct}%/mês → $${final.toFixed(0)} em dez/26. Meta de $1.000 precisa de ${needed.toFixed(1)}%/mês.`;
-  warn.style.color = pct >= needed ? '#1db87a' : '#f0a030';
+  const final=bal*Math.pow(1+pct/100,6);
+  const warn=document.getElementById('meta-warn');
+  warn.textContent=`$${bal} com ${pct}%/mês → $${final.toFixed(0)} em dez/26. Meta real: ${needed.toFixed(1)}%/mês.`;
+  warn.style.color=pct>=needed?'#1db87a':'#f0a030';
 }
 
-function addAlarm() {
-  const par = document.getElementById('al-par').value.trim().toUpperCase();
-  const price = document.getElementById('al-price').value;
-  const reason = document.getElementById('al-reason').value.trim();
-  if (!par || !price) return;
-  const cont = document.getElementById('alarm-container');
-  const div = document.createElement('div');
-  div.className = 'alarm-row';
-  div.innerHTML = `<div class="alarm-dot" style="background:#8b7fe8;"></div><span class="alarm-par">${par}</span><span class="alarm-price">$${parseFloat(price).toFixed(2)} · ${reason||'alarme manual'}</span><span class="badge" style="background:#8b7fe815;color:#8b7fe8;">NOVO</span>`;
-  cont.appendChild(div);
-  document.getElementById('al-par').value = '';
-  document.getElementById('al-price').value = '';
-  document.getElementById('al-reason').value = '';
+function updateWl(){
+  const par=document.getElementById('wb-par').value;
+  const bd=document.getElementById('wb-d').value;
+  const b4=document.getElementById('wb-4h').value;
+  const note=document.getElementById('wb-note').value;
+  const rows=document.querySelectorAll('#wl-body .wl-row');
+  const pars=['BTCUSDT.P','ETHUSDT.P','BNBUSDT.P','SOLUSDT.P','XRPUSDT.P','PAXGUSDT'];
+  const idx=pars.indexOf(par);
+  if(idx<0||!rows[idx]) return;
+  const biasClass=b=>b==='BULLISH'?'bias-bull':b==='BEARISH'?'bias-bear':'bias-neut';
+  rows[idx].children[1].className='wl-bias '+biasClass(bd); rows[idx].children[1].textContent=bd;
+  rows[idx].children[2].className='wl-bias '+biasClass(b4); rows[idx].children[2].textContent=b4;
+  if(note) rows[idx].children[3].textContent=note;
+  document.getElementById('wb-note').value='';
 }
 
-function saveDiary() {
-  const entry = {
-    par: document.getElementById('d-par').value || '—',
-    date: document.getElementById('d-date').value || '—',
-    entry: document.getElementById('d-entry').value,
-    sl: document.getElementById('d-sl').value,
-    tp: document.getElementById('d-tp').value,
-    score: document.getElementById('d-score').value || '—',
-    result: document.getElementById('d-result').value || '—',
-    logic: document.getElementById('d-logic').value,
-  };
-  diaryEntries.push(entry);
-  const log = document.getElementById('diary-log');
-  if (diaryEntries.length === 1) log.innerHTML = '';
-  const isPos = entry.result.includes('+');
-  const div = document.createElement('div');
-  div.className = 'diary-entry';
-  div.innerHTML = `<div class="de-header"><span class="de-par">${entry.par}</span><span class="de-result" style="color:${isPos?'#1db87a':'#e24b4a'}">${entry.result}</span></div><div class="de-meta">${entry.date} · Entrada $${entry.entry} → TP $${entry.tp} · SL $${entry.sl} · Score: ${entry.score}</div>${entry.logic?`<div style="font-size:11px;color:#555a6e;margin-top:4px;">${entry.logic.substring(0,120)}${entry.logic.length>120?'…':''}</div>`:''}`;
-  log.appendChild(div);
-  document.getElementById('d-saved').style.display = 'block';
-  setTimeout(() => document.getElementById('d-saved').style.display = 'none', 2000);
+function addQueue(){
+  const par=document.getElementById('aq-par').value.trim().toUpperCase();
+  const price=document.getElementById('aq-price').value;
+  const action=document.getElementById('aq-action').value.trim();
+  if(!par||!price) return;
+  const cont=document.getElementById('alarm-queue');
+  const d=document.createElement('div');
+  d.className='alarm-priority'; d.style.cssText='background:var(--purple-bg);border-color:rgba(139,127,232,0.2)';
+  d.innerHTML=`<div class="ap-dot" style="background:var(--purple)"></div><span class="ap-par">${par}</span><span class="ap-price">$${parseFloat(price).toFixed(2)}</span><span class="ap-why">${action||'—'}</span><span class="badge" style="background:var(--bg3);color:var(--text3)">NA FILA</span>`;
+  cont.appendChild(d);
+  document.getElementById('aq-par').value='';
+  document.getElementById('aq-price').value='';
+  document.getElementById('aq-action').value='';
 }
 
-function clearDiary() {
-  ['d-par','d-date','d-entry','d-sl','d-tp','d-score','d-result','d-logic','d-learn'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
+function saveDiary(){
+  const e={par:document.getElementById('d-par').value||'—',date:document.getElementById('d-date').value||'—',entry:document.getElementById('d-entry').value,sl:document.getElementById('d-sl').value,tp:document.getElementById('d-tp').value,score:document.getElementById('d-score').value||'—',tools:document.getElementById('d-tools').value||'—',result:document.getElementById('d-result').value||'—',logic:document.getElementById('d-logic').value};
+  diaryLog.push(e);
+  const log=document.getElementById('diary-log');
+  if(diaryLog.length===1) log.innerHTML='';
+  const pos=e.result.includes('+');
+  const d=document.createElement('div'); d.className='de';
+  d.innerHTML=`<div class="de-hdr"><span class="de-par">${e.par} · ${e.date}</span><span class="de-result" style="color:${pos?'#1db87a':'#e24b4a'}">${e.result}</span></div><div class="de-meta">Entrada $${e.entry} → TP $${e.tp} · SL $${e.sl} · Score ${e.score} · ${e.tools}</div>${e.logic?`<div style="font-size:11px;color:var(--text3);margin-top:3px">${e.logic.substring(0,100)}${e.logic.length>100?'…':''}</div>`:''}`;
+  log.appendChild(d);
+  document.getElementById('d-ok').style.display='block';
+  setTimeout(()=>document.getElementById('d-ok').style.display='none',2000);
 }
 
-function toggleSession(row) {
-  row.classList.toggle('on');
-  row.querySelector('.chk-box').classList.toggle('on');
+function clearDiary(){['d-par','d-date','d-entry','d-sl','d-tp','d-score','d-tools','d-result','d-logic','d-learn'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});}
+
+function togSess(row){row.classList.toggle('on');row.querySelector('.chk-box').classList.toggle('on');}
+
+function updateClock(){
+  const now=new Date();
+  const h=String(now.getUTCHours()).padStart(2,'0');
+  const m=String(now.getUTCMinutes()).padStart(2,'0');
+  const s=String(now.getUTCSeconds()).padStart(2,'0');
+  const utc=`${h}:${m}:${s} UTC`;
+  document.getElementById('hd-time').textContent=utc;
+  const hour=now.getUTCHours();
+  const sess=document.getElementById('hd-session');
+  if(hour>=8&&hour<12){sess.textContent='Sessão Londres';sess.className='chip chip-g';}
+  else if(hour>=13&&hour<17){sess.textContent='Sessão Nova York';sess.className='chip chip-g';}
+  else if(hour>=0&&hour<7){sess.textContent='Sessão Ásia — cuidado';sess.className='chip chip-r';}
+  else{sess.textContent='Entre sessões';sess.className='chip chip-a';}
 }
 
-function updateClock() {
-  const now = new Date();
-  const utc = now.toUTCString().split(' ')[4];
-  document.getElementById('hd-time').textContent = utc + ' UTC';
-}
-
-buildChk();
-calc();
-calcMetas();
-setInterval(updateClock, 1000);
-updateClock();
+buildChk(); calc(); calcMetas();
+setInterval(updateClock,1000); updateClock();
 </script>
 </body>
 </html>
