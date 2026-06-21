@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Cockpit — $90 → $1.000</title>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e28;
+    --bg4: #222737;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --text2: #8b90a0;
+    --text3: #555a6e;
+    --green: #1db87a;
+    --green2: #0f7a52;
+    --green-bg: rgba(29,184,122,0.1);
+    --red: #e24b4a;
+    --red-bg: rgba(226,75,74,0.1);
+    --amber: #f0a030;
+    --amber-bg: rgba(240,160,48,0.1);
+    --blue: #3d8ef0;
+    --blue-bg: rgba(61,142,240,0.1);
+    --purple: #8b7fe8;
+    --purple-bg: rgba(139,127,232,0.1);
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+  
+  /* Layout */
+  .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+  .logo span { color: var(--green); }
+  .header-chips { display: flex; gap: 8px; }
+  .chip { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .chip-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(29,184,122,0.25); }
+  .chip-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(240,160,48,0.25); }
+  .chip-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(61,142,240,0.25); }
+  .header-time { font-size: 11px; color: var(--text3); font-variant-numeric: tabular-nums; }
+
+  .main { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 56px); }
+  
+  /* Sidebar */
+  .sidebar { background: var(--bg2); border-right: 1px solid var(--border); padding: 16px 0; }
+  .sidebar-section { margin-bottom: 4px; }
+  .sidebar-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; padding: 8px 16px 4px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; cursor: pointer; color: var(--text2); font-size: 13px; font-weight: 500; border-left: 2px solid transparent; transition: all 0.15s; user-select: none; }
+  .nav-item:hover { background: var(--bg3); color: var(--text); }
+  .nav-item.active { background: var(--bg3); color: var(--green); border-left-color: var(--green); }
+  .nav-item .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .nav-item .icon { font-size: 15px; width: 18px; text-align: center; }
+  
+  .sidebar-stats { margin: 16px; padding: 12px; background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); }
+  .ss-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .ss-row:last-child { margin-bottom: 0; }
+  .ss-label { font-size: 11px; color: var(--text3); }
+  .ss-val { font-size: 12px; font-weight: 600; }
+  .progress-bar { height: 4px; background: var(--bg4); border-radius: 2px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.5s; }
+
+  /* Content */
+  .content { padding: 24px; overflow-y: auto; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Cards */
+  .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .metric-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; }
+  .metric-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .metric-value { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  .metric-sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  .col-green { color: var(--green); } .col-red { color: var(--red); }
+  .col-amber { color: var(--amber); } .col-blue { color: var(--blue); }
+  .col-purple { color: var(--purple); }
+
+  .section-title { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin: 20px 0 10px; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 12px; }
+
+  /* Checklist */
+  .chk-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; transition: background 0.1s; }
+  .chk-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .chk-item:first-child { padding-top: 0; }
+  .chk-item:hover { opacity: 0.85; }
+  .chk-box { width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+  .chk-box.on { background: var(--green); border-color: var(--green); }
+  .chk-box svg { display: none; }
+  .chk-box.on svg { display: block; }
+  .chk-text { flex: 1; font-size: 13px; color: var(--text2); transition: color 0.15s; }
+  .chk-item.on .chk-text { color: var(--text); }
+  .chk-pts { font-size: 12px; font-weight: 700; color: var(--text3); transition: color 0.15s; min-width: 32px; text-align: right; }
+  .chk-item.on .chk-pts { color: var(--green); }
+
+  /* Score */
+  .score-display { background: var(--bg3); border-radius: var(--radius); padding: 14px 16px; margin: 12px 0; }
+  .score-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .score-bar { height: 10px; background: var(--bg4); border-radius: 5px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 5px; transition: width 0.4s, background 0.4s; }
+  .score-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-top: 4px; }
+  .verdict-box { border-radius: var(--radius); padding: 12px 16px; margin-top: 12px; border: 1px solid; }
+  .verdict-tier { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .verdict-msg { font-size: 12px; line-height: 1.5; }
+  
+  /* Calc grid */
+  .calc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+  .calc-cell { background: var(--bg3); border-radius: var(--radius); padding: 10px 12px; }
+  .calc-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .calc-val { font-size: 16px; font-weight: 700; }
+
+  /* Sliders */
+  .slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .slider-label { font-size: 12px; color: var(--text2); width: 160px; flex-shrink: 0; }
+  .slider-row input[type=range] { flex: 1; -webkit-appearance: none; height: 4px; background: var(--bg4); border-radius: 2px; outline: none; cursor: pointer; }
+  .slider-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--green); cursor: pointer; }
+  .slider-val { font-size: 13px; font-weight: 600; min-width: 52px; text-align: right; color: var(--text); }
+
+  /* Month table */
+  .month-row { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .month-row:last-child { border-bottom: none; }
+  .month-name { font-size: 12px; color: var(--text3); width: 52px; flex-shrink: 0; }
+  .month-bar { flex: 1; height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+  .month-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+  .month-bal { font-size: 13px; font-weight: 700; width: 68px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  .month-flag { font-size: 11px; width: 36px; text-align: right; flex-shrink: 0; }
+
+  /* Alarms */
+  .alarm-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .alarm-row:last-child { border-bottom: none; }
+  .alarm-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .alarm-par { font-size: 13px; font-weight: 700; color: var(--text); width: 100px; flex-shrink: 0; }
+  .alarm-price { font-size: 12px; color: var(--text2); flex: 1; }
+  .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+
+  /* Diary */
+  .diary-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .diary-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .field-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .field-input { width: 100%; padding: 8px 10px; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text); font-size: 13px; font-family: inherit; outline: none; transition: border-color 0.15s; }
+  .field-input:focus { border-color: var(--green); }
+  textarea.field-input { resize: vertical; min-height: 60px; }
+
+  /* Rule list */
+  .rule-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .rule-text { flex: 1; font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .rule-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+
+  /* Process steps */
+  .process-step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .process-step:last-child { border-bottom: none; }
+  .ps-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .ps-body { flex: 1; }
+  .ps-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .ps-sub { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid; transition: all 0.15s; font-family: inherit; }
+  .btn-green { background: var(--green-bg); color: var(--green); border-color: rgba(29,184,122,0.3); }
+  .btn-green:hover { background: var(--green); color: #000; }
+  .btn-ghost { background: transparent; color: var(--text2); border-color: var(--border2); }
+  .btn-ghost:hover { background: var(--bg3); color: var(--text); }
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+  /* Info strip */
+  .info-strip { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius); margin-bottom: 8px; font-size: 12px; border: 1px solid; }
+  .info-strip.green { background: var(--green-bg); color: var(--green); border-color: rgba(29,184,122,0.2); }
+  .info-strip.red { background: var(--red-bg); color: var(--red); border-color: rgba(226,75,74,0.2); }
+  .info-strip.amber { background: var(--amber-bg); color: var(--amber); border-color: rgba(240,160,48,0.2); }
+  .info-strip.blue { background: var(--blue-bg); color: var(--blue); border-color: rgba(61,142,240,0.2); }
+
+  /* Diary log */
+  .diary-entry { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .diary-entry:last-child { border-bottom: none; }
+  .de-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+  .de-par { font-size: 13px; font-weight: 700; color: var(--text); }
+  .de-result { font-size: 12px; font-weight: 700; }
+  .de-meta { font-size: 11px; color: var(--text3); }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 32px 16px; color: var(--text3); font-size: 13px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .calc-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <div class="logo">Trading<span>Cockpit</span></div>
+    <div class="header-chips">
+      <span class="chip chip-green" id="hd-balance">$90</span>
+      <span class="chip chip-amber" id="hd-meta">Meta: ~49%/mês</span>
+      <span class="chip chip-blue">Dez/26</span>
+    </div>
+  </div>
+  <div class="header-time" id="hd-time">--:--:-- UTC</div>
+</header>
+
+<div class="main">
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Análise</div>
+      <div class="nav-item active" onclick="showPanel('pre')">
+        <span class="icon">◎</span> Pré-trade
+      </div>
+      <div class="nav-item" onclick="showPanel('alarmes')">
+        <span class="icon">◈</span> Alarmes
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Gestão</div>
+      <div class="nav-item" onclick="showPanel('metas')">
+        <span class="icon">◇</span> Metas mensais
+      </div>
+      <div class="nav-item" onclick="showPanel('diario')">
+        <span class="icon">◻</span> Diário
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Sistema</div>
+      <div class="nav-item" onclick="showPanel('regras')">
+        <span class="icon">◆</span> Regras
+      </div>
+      <div class="nav-item" onclick="showPanel('processo')">
+        <span class="icon">◈</span> Processo diário
+      </div>
+    </div>
+
+    <div class="sidebar-stats">
+      <div class="ss-row">
+        <span class="ss-label">Balance</span>
+        <span class="ss-val col-green" id="sb-bal">$90</span>
+      </div>
+      <div class="ss-row">
+        <span class="ss-label">Alvo</span>
+        <span class="ss-val" style="color:var(--text2);">$1.000</span>
+      </div>
+      <div class="ss-row">
+        <span class="ss-label">Progresso</span>
+        <span class="ss-val col-amber" id="sb-pct">9%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="sb-prog" style="width:9%;"></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <!-- PRÉ-TRADE -->
+    <div id="panel-pre" class="panel active">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Balance</div>
+          <div class="metric-value col-green" id="m-bal-disp">$90</div>
+          <div class="metric-sub">capital disponível</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Score</div>
+          <div class="metric-value col-purple" id="m-score">0/100</div>
+          <div class="metric-sub" id="m-tier-sub">sem critérios</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">R:R do setup</div>
+          <div class="metric-value" id="m-rr" style="color:var(--amber);">1:1.8</div>
+          <div class="metric-sub" id="m-bewr">win rate mín: 35.7%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Risco em $</div>
+          <div class="metric-value col-red" id="m-riskusd">$0</div>
+          <div class="metric-sub" id="m-tier-disp">aguardando</div>
+        </div>
+      </div>
+
+      <div class="section-title">Parâmetros do trade</div>
+      <div class="card">
+        <div class="slider-row">
+          <span class="slider-label">Balance atual (USD)</span>
+          <input type="range" id="r-bal" min="50" max="1000" step="1" value="90" oninput="calc()">
+          <span class="slider-val" id="o-bal">$90</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Stop loss (%)</span>
+          <input type="range" id="r-sl" min="1" max="10" step="0.5" value="5" oninput="calc()">
+          <span class="slider-val" id="o-sl">5%</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Take profit (%)</span>
+          <input type="range" id="r-tp" min="3" max="30" step="0.5" value="9" oninput="calc()">
+          <span class="slider-val" id="o-tp">9%</span>
+        </div>
+      </div>
+
+      <div class="section-title">Checklist de confluência SMC</div>
+      <div class="card" id="chk-container"></div>
+
+      <div class="score-display">
+        <div class="score-header">
+          <span style="font-size:12px; color:var(--text2);">Convicção do setup</span>
+          <span style="font-size:14px; font-weight:700;" id="score-label">0 / 100</span>
+        </div>
+        <div class="score-bar">
+          <div class="score-fill" id="score-fill" style="width:0%; background:var(--text3);"></div>
+        </div>
+        <div class="score-ticks">
+          <span>Não operar</span><span>D (25)</span><span>C (45)</span><span>B (65)</span><span>A (80)</span>
+        </div>
+      </div>
+
+      <div class="verdict-box" id="verdict-box" style="border-color:var(--border); background:var(--bg3);">
+        <div class="verdict-tier" id="verdict-tier" style="color:var(--text2);">Selecione os critérios do setup</div>
+        <div class="verdict-msg" id="verdict-msg" style="color:var(--text3);">Marque o que o trade tem para receber o veredito.</div>
+      </div>
+
+      <div class="calc-grid" id="calc-grid" style="display:none;">
+        <div class="calc-cell">
+          <div class="calc-label">Exposição total</div>
+          <div class="calc-val col-blue" id="c-exp">—</div>
+        </div>
+        <div class="calc-cell">
+          <div class="calc-label">Ganho potencial (TP)</div>
+          <div class="calc-val col-green" id="c-gain">—</div>
+        </div>
+        <div class="calc-cell">
+          <div class="calc-label">Perda máxima (SL)</div>
+          <div class="calc-val col-red" id="c-loss">—</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetChk()">Limpar checklist</button>
+      </div>
+    </div>
+
+    <!-- METAS -->
+    <div id="panel-metas" class="panel">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Início</div>
+          <div class="metric-value" id="meta-start">$90</div>
+          <div class="metric-sub">jun/26</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Alvo</div>
+          <div class="metric-value col-green">$1.000</div>
+          <div class="metric-sub">dez/26</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Meses</div>
+          <div class="metric-value col-blue">6</div>
+          <div class="metric-sub">restantes</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Meta/mês</div>
+          <div class="metric-value col-amber" id="meta-need">49%</div>
+          <div class="metric-sub">crescimento composto</div>
+        </div>
+      </div>
+      <div class="section-title">Simular crescimento</div>
+      <div class="card">
+        <div class="slider-row">
+          <span class="slider-label">Balance atual (USD)</span>
+          <input type="range" id="meta-bal" min="50" max="500" step="1" value="90" oninput="calcMetas()">
+          <span class="slider-val" id="meta-bal-out">$90</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Ganho líquido/mês (%)</span>
+          <input type="range" id="meta-pct" min="10" max="90" step="1" value="49" oninput="calcMetas()">
+          <span class="slider-val" id="meta-pct-out">49%</span>
+        </div>
+      </div>
+      <div class="section-title">Projeção mês a mês</div>
+      <div class="card" id="meta-table"></div>
+      <div class="card" id="meta-warning" style="font-size:12px; color:var(--text2);"></div>
+    </div>
+
+    <!-- ALARMES -->
+    <div id="panel-alarmes" class="panel">
+      <div class="section-title">Pares monitorados</div>
+      <div class="card" id="alarm-container">
+        <div class="alarm-row">
+          <div class="alarm-dot" style="background:var(--green);"></div>
+          <span class="alarm-par">SOLUSDT</span>
+          <span class="alarm-price">$76,00 (T1) · $70,00 (alerta) · $69,56 (SL)</span>
+          <span class="badge" style="background:var(--green-bg);color:var(--green);">LONG ATIVO</span>
+        </div>
+        <div class="alarm-row">
+          <div class="alarm-dot" style="background:var(--amber);"></div>
+          <span class="alarm-par">PAXGUSDT</span>
+          <span class="alarm-price">Aguardando OB diário — hedge potential</span>
+          <span class="badge" style="background:var(--amber-bg);color:var(--amber);">MONITORAR</span>
+        </div>
+        <div class="alarm-row">
+          <div class="alarm-dot" style="background:var(--text3);"></div>
+          <span class="alarm-par">BTCUSDT</span>
+          <span class="alarm-price">Sem setup confirmado</span>
+          <span class="badge" style="background:var(--bg3);color:var(--text3);">AGUARDAR</span>
+        </div>
+        <div class="alarm-row">
+          <div class="alarm-dot" style="background:var(--text3);"></div>
+          <span class="alarm-par">ETHUSDT</span>
+          <span class="alarm-price">Sem setup confirmado</span>
+          <span class="badge" style="background:var(--bg3);color:var(--text3);">AGUARDAR</span>
+        </div>
+      </div>
+      <div class="section-title">Adicionar alarme</div>
+      <div class="card">
+        <div style="display:grid; grid-template-columns:1fr 1fr 2fr; gap:10px; margin-bottom:10px;">
+          <div><div class="field-label">Par</div><input class="field-input" id="al-par" placeholder="SOLUSDT"></div>
+          <div><div class="field-label">Preço</div><input class="field-input" type="number" id="al-price" placeholder="0.00"></div>
+          <div><div class="field-label">Motivo / ação</div><input class="field-input" id="al-reason" placeholder="ex: testa +OB 30min — avaliar long"></div>
+        </div>
+        <button class="btn btn-green" onclick="addAlarm()">+ Adicionar alarme</button>
+      </div>
+    </div>
+
+    <!-- DIÁRIO -->
+    <div id="panel-diario" class="panel">
+      <div class="section-title">Registrar trade</div>
+      <div class="card">
+        <div class="diary-grid2">
+          <div><div class="field-label">Par</div><input class="field-input" id="d-par" placeholder="SOLUSDT"></div>
+          <div><div class="field-label">Data</div><input class="field-input" id="d-date" placeholder="21/06/2026"></div>
+        </div>
+        <div class="diary-grid3">
+          <div><div class="field-label">Entrada</div><input class="field-input" type="number" id="d-entry" placeholder="73.22"></div>
+          <div><div class="field-label">Stop</div><input class="field-input" type="number" id="d-sl" placeholder="69.56"></div>
+          <div><div class="field-label">Alvo</div><input class="field-input" type="number" id="d-tp" placeholder="79.90"></div>
+        </div>
+        <div class="diary-grid2">
+          <div><div class="field-label">Score do setup</div><input class="field-input" id="d-score" placeholder="45 pts — Tier C"></div>
+          <div><div class="field-label">Resultado</div><input class="field-input" id="d-result" placeholder="+$XX.XX ou -$XX.XX"></div>
+        </div>
+        <div style="margin-bottom:10px;"><div class="field-label">Lógica da entrada</div><textarea class="field-input" id="d-logic" placeholder="O que você viu: OB, sweep, FVG, divergência, fibonacci..."></textarea></div>
+        <div><div class="field-label">Aprendizado</div><textarea class="field-input" id="d-learn" placeholder="O que o mercado fez, se seguiu o plano, o que faria diferente..."></textarea></div>
+        <div class="btn-row">
+          <button class="btn btn-green" onclick="saveDiary()">Salvar trade</button>
+          <button class="btn btn-ghost" onclick="clearDiary()">Limpar</button>
+        </div>
+        <div id="d-saved" style="display:none; margin-top:8px; font-size:12px; color:var(--green);">✓ Trade salvo</div>
+      </div>
+      <div class="section-title">Histórico desta sessão</div>
+      <div class="card" id="diary-log"><div class="empty">Nenhum trade registrado ainda nesta sessão.</div></div>
+    </div>
+
+    <!-- REGRAS -->
+    <div id="panel-regras" class="panel">
+      <div class="info-strip green">Sistema de regras — leia antes de cada sessão de trading</div>
+      <div class="section-title">Regras de entrada</div>
+      <div class="card">
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--red-bg); color:var(--red);">1</div>
+          <div><div class="rule-title">Score mínimo 45 pts para entrar</div><div class="rule-text">Abaixo de 45 é Tier D ou sem trade. Assiste, aprende, mas não entra. Sem exceção — nem quando "parece óbvio".</div></div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--red-bg); color:var(--red);">2</div>
+          <div><div class="rule-title">R:R mínimo 1:1,5 — ideal 1:2+</div><div class="rule-text">Abaixo de 1:1,5 a matemática não favorece no longo prazo. Rejeita o setup independente da "certeza" emocional.</div></div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--red-bg); color:var(--red);">3</div>
+          <div><div class="rule-title">Máximo 2 trades simultâneos</div><div class="rule-text">Altcoins têm correlação alta. 3 longs simultâneos = 1 trade com 3× de risco disfarçado de diversificação.</div></div>
+        </div>
+      </div>
+      <div class="section-title">Regras de gestão</div>
+      <div class="card">
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--amber-bg); color:var(--amber);">4</div>
+          <div><div class="rule-title">Após T1: stop vai para breakeven</div><div class="rule-text">Quando o primeiro alvo parcial for atingido, o stop sobe para a entrada. Trade vira risco zero imediatamente.</div></div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--amber-bg); color:var(--amber);">5</div>
+          <div><div class="rule-title">2 stops seguidos → pausa de 5 dias</div><div class="rule-text">Dois stops indicam viés errado ou mercado desfavorável. Para, revisa os últimos trades, volta com clareza.</div></div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--amber-bg); color:var(--amber);">6</div>
+          <div><div class="rule-title">Drawdown mensal máximo de 20%</div><div class="rule-text">Se o balance cair 20% num mês, fecha tudo. O mercado está te ensinando algo — escuta antes de continuar.</div></div>
+        </div>
+      </div>
+      <div class="section-title">Regras de comportamento</div>
+      <div class="card">
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--green-bg); color:var(--green);">7</div>
+          <div><div class="rule-title">Todo trade entra no diário — sem exceção</div><div class="rule-text">Sem registro não tem evolução. Em 6 meses o diário vai mostrar seus padrões de erro que nenhum indicador mostra.</div></div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--green-bg); color:var(--green);">8</div>
+          <div><div class="rule-title">Sessão de entrada: Londres (08–12h UTC) ou NY (13–17h UTC)</div><div class="rule-text">Volume e liquidez reais. Sessão asiática tem armadilhas frequentes e spread alto em altcoins menores.</div></div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-num" style="background:var(--green-bg); color:var(--green);">9</div>
+          <div><div class="rule-title">PAXG como hedge — não como trade especulativo</div><div class="rule-text">Ouro sobe quando cripto cai. Em momentos de correlação bearish generalizada no crypto, PAXG protege capital.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROCESSO -->
+    <div id="panel-processo" class="panel">
+      <div class="info-strip blue">Processo diário — 4 horas estruturadas produzem mais que 12 horas reativas</div>
+      <div class="section-title">Rotina de análise (4h/dia)</div>
+      <div class="card">
+        <div class="process-step">
+          <div class="ps-num" style="background:var(--blue-bg); color:var(--blue);">1</div>
+          <div class="ps-body"><div class="ps-title">Contexto macro — 30min</div><div class="ps-sub">BTC dominance + estrutura diária dos pares monitorados. Define o viés do dia. Não entra em nada ainda — só observa e anota.</div></div>
+        </div>
+        <div class="process-step">
+          <div class="ps-num" style="background:var(--purple-bg); color:var(--purple);">2</div>
+          <div class="ps-body"><div class="ps-title">Scan de setups — 45min</div><div class="ps-sub">Varre todos os pares: crypto + PAXG. Procura OBs respeitados, FVGs abertos e sweeps recentes. Marca candidatos. Sem julgamento ainda.</div></div>
+        </div>
+        <div class="process-step">
+          <div class="ps-num" style="background:var(--amber-bg); color:var(--amber);">3</div>
+          <div class="ps-body"><div class="ps-title">Análise profunda dos candidatos — 1h</div><div class="ps-sub">Para cada candidato: checklist completo no Pré-trade, score, R:R, tamanho de posição. Score abaixo de 45? Descarta sem pena.</div></div>
+        </div>
+        <div class="process-step">
+          <div class="ps-num" style="background:var(--green-bg); color:var(--green);">4</div>
+          <div class="ps-body"><div class="ps-title">Seta alarmes e ordens limit — 15min</div><div class="ps-sub">Configura alertas no TradingView nos gatilhos de entrada exatos. Ordens limit no nível definido. Fecha o gráfico e vai viver.</div></div>
+        </div>
+        <div class="process-step">
+          <div class="ps-num" style="background:var(--red-bg); color:var(--red);">5</div>
+          <div class="ps-body"><div class="ps-title">Revisão de posições abertas — 30min (fim do dia)</div><div class="ps-sub">Checa se T1 foi atingido (mover stop para BE). Registra no diário. Não mexe em nada sem gatilho definido previamente.</div></div>
+        </div>
+      </div>
+      <div class="section-title">Checklist de sessão</div>
+      <div class="card" id="session-chk">
+        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Verificar bias macro (BTC + dominance)</span></div>
+        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Scan completo dos pares monitorados</span></div>
+        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Passar candidatos pelo checklist de score</span></div>
+        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Alarmes configurados no TradingView</span></div>
+        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Posições abertas revisadas (stop BE se necessário)</span></div>
+        <div class="chk-item" onclick="toggleSession(this)"><div class="chk-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text">Trade do dia registrado no diário</span></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const CRITERIA = [
+  { id:'c1', label:'Alinhamento D + 4H + 30min na mesma direção', pts:20 },
+  { id:'c2', label:'Entrada em OB confirmado (tocado + rejeição visível)', pts:15 },
+  { id:'c3', label:'Sweep de liquidez antes da entrada', pts:15 },
+  { id:'c4', label:'FVG de suporte/resistência confluente com entrada', pts:10 },
+  { id:'c5', label:'R:R ≥ 1:2', pts:10 },
+  { id:'c6', label:'Volume confirmando reversão (spike na vela)', pts:10 },
+  { id:'c7', label:'Divergência no RSI ou oscilador (Bull/Bear hidden)', pts:10 },
+  { id:'c8', label:'Fibonacci 0.618–0.786 confluente com OB/FVG', pts:5 },
+  { id:'c9', label:'Bollinger Band: preço tocou banda externa + retorno', pts:5 },
+];
+const TIERS = [
+  { min:0,  max:24,  name:'Não operar',          color:'#555a6e', rPct:0,   lev:0,  msg:'Setup sem confluência suficiente. O mercado abre todo dia — aguarde um setup de qualidade.' },
+  { min:25, max:44,  name:'Tier D — Especulativo',color:'#e24b4a', rPct:2,   lev:5,  msg:'Poucos critérios. Risco mínimo (2%). Apenas para aprendizado com dinheiro real.' },
+  { min:45, max:64,  name:'Tier C — Médio',        color:'#f0a030', rPct:3.5, lev:8,  msg:'Confluência básica. Tamanho conservador (3.5%). Trade válido com disciplina.' },
+  { min:65, max:79,  name:'Tier B — Alta convicção',color:'#3d8ef0', rPct:5,   lev:11, msg:'Múltiplas confluências. Tamanho padrão (5%). Execute o plano sem alterações.' },
+  { min:80, max:100, name:'Tier A — Máxima convicção',color:'#1db87a', rPct:7, lev:15, msg:'Setup premium. Todas confluências presentes. Máxima exposição (7%).' },
+];
+
+let checks = {};
+CRITERIA.forEach(c => checks[c.id] = false);
+let diaryEntries = [];
+let alarmList = [];
+
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function buildChk() {
+  const cont = document.getElementById('chk-container');
+  cont.innerHTML = '';
+  CRITERIA.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'chk-item';
+    div.id = 'chki-' + c.id;
+    div.innerHTML = `<div class="chk-box" id="cb-${c.id}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="chk-text" id="ct-${c.id}">${c.label}</span><span class="chk-pts" id="cp-${c.id}">+${c.pts}</span>`;
+    div.addEventListener('click', () => { checks[c.id] = !checks[c.id]; calc(); });
+    cont.appendChild(div);
+  });
+}
+
+function getTier(score) { return TIERS.find(t => score >= t.min && score <= t.max) || TIERS[0]; }
+
+function calc() {
+  const bal = parseFloat(document.getElementById('r-bal').value);
+  const sl = parseFloat(document.getElementById('r-sl').value);
+  const tp = parseFloat(document.getElementById('r-tp').value);
+  document.getElementById('o-bal').textContent = '$' + bal;
+  document.getElementById('o-sl').textContent = sl.toFixed(1) + '%';
+  document.getElementById('o-tp').textContent = tp.toFixed(1) + '%';
+  const rr = tp / sl;
+  const rrEl = document.getElementById('m-rr');
+  rrEl.textContent = '1:' + rr.toFixed(1);
+  rrEl.style.color = rr >= 2 ? '#1db87a' : rr >= 1.5 ? '#3d8ef0' : '#e24b4a';
+  document.getElementById('m-bewr').textContent = 'win rate mín: ' + (1/(1+rr)*100).toFixed(1) + '%';
+  document.getElementById('m-bal-disp').textContent = '$' + bal;
+  document.getElementById('sb-bal').textContent = '$' + bal;
+  const prog = Math.min(bal/1000*100, 100);
+  document.getElementById('sb-prog').style.width = prog + '%';
+  document.getElementById('sb-pct').textContent = prog.toFixed(0) + '%';
+  document.getElementById('hd-balance').textContent = '$' + bal;
+
+  const needed = (Math.pow(1000/bal, 1/6) - 1) * 100;
+  document.getElementById('hd-meta').textContent = 'Meta: ~' + needed.toFixed(0) + '%/mês';
+
+  CRITERIA.forEach(c => {
+    const on = checks[c.id];
+    document.getElementById('chki-' + c.id).classList.toggle('on', on);
+    document.getElementById('cb-' + c.id).classList.toggle('on', on);
+  });
+
+  const score = CRITERIA.reduce((s,c) => s + (checks[c.id] ? c.pts : 0), 0);
+  const tier = getTier(score);
+  document.getElementById('score-label').textContent = score + ' / 100';
+  document.getElementById('m-score').textContent = score + '/100';
+  document.getElementById('m-tier-sub').textContent = tier.name;
+  const fill = document.getElementById('score-fill');
+  fill.style.width = score + '%';
+  fill.style.background = tier.color;
+
+  const vb = document.getElementById('verdict-box');
+  vb.style.borderColor = tier.color;
+  vb.style.background = tier.color + '15';
+  document.getElementById('verdict-tier').textContent = tier.name;
+  document.getElementById('verdict-tier').style.color = tier.color;
+  document.getElementById('verdict-msg').textContent = tier.msg;
+  document.getElementById('verdict-msg').style.color = '#8b90a0';
+
+  if (tier.rPct > 0) {
+    const rUsd = bal * tier.rPct / 100;
+    const exp = rUsd / (sl/100);
+    document.getElementById('m-riskusd').textContent = '-$' + rUsd.toFixed(2);
+    document.getElementById('m-tier-disp').textContent = tier.lev + '× · ' + tier.rPct + '% risco';
+    document.getElementById('calc-grid').style.display = 'grid';
+    document.getElementById('c-exp').textContent = '$' + exp.toFixed(2);
+    document.getElementById('c-gain').textContent = '+$' + (exp * tp/100).toFixed(2);
+    document.getElementById('c-loss').textContent = '-$' + (exp * sl/100).toFixed(2);
+  } else {
+    document.getElementById('m-riskusd').textContent = '$0';
+    document.getElementById('m-tier-disp').textContent = 'aguardando score';
+    document.getElementById('calc-grid').style.display = 'none';
+  }
+}
+
+function resetChk() { CRITERIA.forEach(c => checks[c.id] = false); calc(); }
+
+function calcMetas() {
+  const bal = parseFloat(document.getElementById('meta-bal').value);
+  const pct = parseFloat(document.getElementById('meta-pct').value);
+  document.getElementById('meta-bal-out').textContent = '$' + bal;
+  document.getElementById('meta-pct-out').textContent = pct + '%';
+  document.getElementById('meta-start').textContent = '$' + bal;
+  const needed = (Math.pow(1000/bal,1/6)-1)*100;
+  document.getElementById('meta-need').textContent = needed.toFixed(1) + '%';
+  const months = ['Jul/26','Ago/26','Set/26','Out/26','Nov/26','Dez/26'];
+  const cont = document.getElementById('meta-table');
+  cont.innerHTML = '';
+  let b = bal;
+  months.forEach((m,i) => {
+    b = b * (1 + pct/100);
+    const prog = Math.min(b/1000*100, 100);
+    const color = b >= 1000 ? '#1db87a' : b >= 500 ? '#3d8ef0' : '#f0a030';
+    const hit = b >= 1000;
+    const div = document.createElement('div');
+    div.className = 'month-row';
+    div.innerHTML = `<span class="month-name">${m}</span><div class="month-bar"><div class="month-bar-fill" style="width:${prog.toFixed(0)}%;background:${color};"></div></div><span class="month-bal" style="color:${color};">$${Math.min(b,9999).toFixed(0)}</span><span class="month-flag" style="color:${color};">${hit ? '🎯' : '+'+pct+'%'}</span>`;
+    cont.appendChild(div);
+    if (hit && !cont.dataset.done) { cont.dataset.done = '1'; }
+  });
+  delete cont.dataset.done;
+  const final = bal * Math.pow(1+pct/100, 6);
+  const warn = document.getElementById('meta-warning');
+  warn.textContent = `Partindo de $${bal} com ${pct}%/mês → $${final.toFixed(0)} em dez/26. Meta de $1.000 precisa de ${needed.toFixed(1)}%/mês.`;
+  warn.style.color = pct >= needed ? '#1db87a' : '#f0a030';
+}
+
+function addAlarm() {
+  const par = document.getElementById('al-par').value.trim().toUpperCase();
+  const price = document.getElementById('al-price').value;
+  const reason = document.getElementById('al-reason').value.trim();
+  if (!par || !price) return;
+  const cont = document.getElementById('alarm-container');
+  const div = document.createElement('div');
+  div.className = 'alarm-row';
+  div.innerHTML = `<div class="alarm-dot" style="background:#8b7fe8;"></div><span class="alarm-par">${par}</span><span class="alarm-price">$${parseFloat(price).toFixed(2)} · ${reason||'alarme manual'}</span><span class="badge" style="background:#8b7fe815;color:#8b7fe8;">NOVO</span>`;
+  cont.appendChild(div);
+  document.getElementById('al-par').value = '';
+  document.getElementById('al-price').value = '';
+  document.getElementById('al-reason').value = '';
+}
+
+function saveDiary() {
+  const entry = {
+    par: document.getElementById('d-par').value || '—',
+    date: document.getElementById('d-date').value || '—',
+    entry: document.getElementById('d-entry').value,
+    sl: document.getElementById('d-sl').value,
+    tp: document.getElementById('d-tp').value,
+    score: document.getElementById('d-score').value || '—',
+    result: document.getElementById('d-result').value || '—',
+    logic: document.getElementById('d-logic').value,
+  };
+  diaryEntries.push(entry);
+  const log = document.getElementById('diary-log');
+  if (diaryEntries.length === 1) log.innerHTML = '';
+  const isPos = entry.result.includes('+');
+  const div = document.createElement('div');
+  div.className = 'diary-entry';
+  div.innerHTML = `<div class="de-header"><span class="de-par">${entry.par}</span><span class="de-result" style="color:${isPos?'#1db87a':'#e24b4a'}">${entry.result}</span></div><div class="de-meta">${entry.date} · Entrada $${entry.entry} → TP $${entry.tp} · SL $${entry.sl} · Score: ${entry.score}</div>${entry.logic?`<div style="font-size:11px;color:#555a6e;margin-top:4px;">${entry.logic.substring(0,120)}${entry.logic.length>120?'…':''}</div>`:''}`;
+  log.appendChild(div);
+  document.getElementById('d-saved').style.display = 'block';
+  setTimeout(() => document.getElementById('d-saved').style.display = 'none', 2000);
+}
+
+function clearDiary() {
+  ['d-par','d-date','d-entry','d-sl','d-tp','d-score','d-result','d-logic','d-learn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function toggleSession(row) {
+  row.classList.toggle('on');
+  row.querySelector('.chk-box').classList.toggle('on');
+}
+
+function updateClock() {
+  const now = new Date();
+  const utc = now.toUTCString().split(' ')[4];
+  document.getElementById('hd-time').textContent = utc + ' UTC';
+}
+
+buildChk();
+calc();
+calcMetas();
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+</body>
+</html>
