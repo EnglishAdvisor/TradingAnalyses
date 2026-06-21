@@ -1,0 +1,244 @@
+// ============================================================
+// SUNDAY MACRO RADAR — EnglishAdvisor Trading System
+// Versão 1.0 — Cole no TradingView Pine Script Editor
+// Funciona em qualquer par — recomendado: BTCUSDT.P
+// ============================================================
+//@version=5
+indicator("Sunday Macro Radar [EA]", overlay=false, max_bars_back=500)
+
+// ─── INPUTS ──────────────────────────────────────────────────
+grp1 = "Regra de Ouro — Thresholds"
+btcd_danger  = input.float(61.0,  "BTC.D bloqueio (acima = não operar alts)", group=grp1)
+btcd_caution = input.float(59.0,  "BTC.D atenção (zona de decisão)",          group=grp1)
+btcd_green   = input.float(57.5,  "BTC.D altseason (abaixo = full alt)",       group=grp1)
+
+grp2 = "Macro Filters"
+yield_danger  = input.float(4.5, "Yield 10Y bloqueio (acima = risk-off)",  group=grp2)
+yield_caution = input.float(4.0, "Yield 10Y atenção",                       group=grp2)
+yield_green   = input.float(3.5, "Yield 10Y favorável (abaixo = bull)",     group=grp2)
+
+grp3 = "Visualização"
+show_labels  = input.bool(true,  "Mostrar labels no gráfico", group=grp3)
+show_table   = input.bool(true,  "Mostrar tabela de status",  group=grp3)
+
+// ─── DADOS EXTERNOS ──────────────────────────────────────────
+// BTC Dominance
+btcd      = request.security("BTC.D",    timeframe.period, close)
+btcd_4h   = request.security("BTC.D",    "240",            close)
+btcd_4h_1 = request.security("BTC.D",    "240",            close[1])
+
+// ETH/BTC
+ethbtc      = request.security("ETHBTC",  timeframe.period, close)
+ethbtc_4h   = request.security("ETHBTC",  "240",            close)
+ethbtc_4h_1 = request.security("ETHBTC",  "240",            close[1])
+
+// SP500
+sp500     = request.security("SPX",       timeframe.period, close)
+sp500_w   = request.security("SPX",       "W",              close)
+sp500_w1  = request.security("SPX",       "W",              close[1])
+
+// US10Y Yield
+y10       = request.security("US10Y",     timeframe.period, close)
+
+// DXY Dollar
+dxy       = request.security("DXY",       timeframe.period, close)
+dxy_d     = request.security("DXY",       "D",              close)
+dxy_d1    = request.security("DXY",       "D",              close[1])
+
+// XAU Gold
+xau       = request.security("XAUUSD",    timeframe.period, close)
+xau_d     = request.security("XAUUSD",    "D",              close)
+xau_d1    = request.security("XAUUSD",    "D",              close[1])
+
+// Brent
+brent     = request.security("UKOIL",     timeframe.period, close)
+
+// BTC atual
+btc_d     = request.security("BTCUSDT",   "D",              close)
+btc_d1    = request.security("BTCUSDT",   "D",              close[1])
+btc_w     = request.security("BTCUSDT",   "W",              close)
+
+// ─── LÓGICA DA REGRA DE OURO ─────────────────────────────────
+// P1: BTC em suporte — preço acima da MM200 diária como proxy
+btc_ma200 = request.security("BTCUSDT", "D", ta.sma(close, 200))
+p1_bull = btc_d > btc_ma200
+
+// P2: BTC.D caindo no 4H
+p2_bull = btcd_4h < btcd_4h_1
+
+// P3: ETH/BTC ganhando força no 4H
+p3_bull = ethbtc_4h > ethbtc_4h_1
+
+rgo_count = (p1_bull ? 1 : 0) + (p2_bull ? 1 : 0) + (p3_bull ? 1 : 0)
+rgo_green  = rgo_count >= 3
+rgo_yellow = rgo_count == 2
+rgo_red    = rgo_count <= 1
+
+// ─── LÓGICA MACRO ────────────────────────────────────────────
+yield_ok    = y10 < yield_caution
+yield_warn  = y10 >= yield_caution and y10 < yield_danger
+yield_block = y10 >= yield_danger
+
+dxy_falling = dxy_d < dxy_d1
+sp500_bull  = sp500_w > sp500_w1
+xau_bull    = xau_d > xau_d1
+brent_ok    = brent < 80.0
+
+macro_score = (yield_ok ? 2 : yield_warn ? 1 : 0) +
+              (dxy_falling ? 2 : 0) +
+              (sp500_bull  ? 2 : 0) +
+              (xau_bull    ? 1 : 0) +
+              (brent_ok    ? 1 : 0)
+// max = 8
+
+macro_green  = macro_score >= 6
+macro_yellow = macro_score >= 3 and macro_score < 6
+macro_red    = macro_score < 3
+
+// ─── SCORE GERAL ─────────────────────────────────────────────
+// Combina RGO (peso 50%) + Macro (peso 50%)
+rgo_pct   = rgo_count / 3.0
+macro_pct = macro_score / 8.0
+total_pct = (rgo_pct * 0.5 + macro_pct * 0.5) * 100
+
+// ─── CORES ───────────────────────────────────────────────────
+c_green  = color.new(#1D9E75, 0)
+c_yellow = color.new(#f0a030, 0)
+c_red    = color.new(#e24b4a, 0)
+c_gray   = color.new(#555a6e, 0)
+c_bg     = color.new(#13161e, 85)
+
+// ─── PLOT SCORE TOTAL ─────────────────────────────────────────
+score_color = total_pct >= 65 ? c_green : total_pct >= 40 ? c_yellow : c_red
+plot(total_pct, "Score Geral (%)", color=score_color, linewidth=3, style=plot.style_area)
+hline(65, "Verde (Operar)", color=c_green,  linestyle=hline.style_dashed, linewidth=1)
+hline(40, "Amarelo (Cuidado)", color=c_yellow, linestyle=hline.style_dashed, linewidth=1)
+hline(20, "Vermelho (Não operar)", color=c_red, linestyle=hline.style_dashed, linewidth=1)
+
+// ─── TABELA PRINCIPAL ────────────────────────────────────────
+if show_table and barstate.islast
+    var table t = table.new(position.top_right, 3, 18,
+         border_color=color.new(#ffffff, 85),
+         border_width=1,
+         frame_color=color.new(#ffffff, 70),
+         frame_width=1)
+
+    // Header
+    table.cell(t, 0, 0, "INDICADOR",        text_color=color.new(#8b90a0,0), bgcolor=color.new(#0d0f14,0), text_size=size.small)
+    table.cell(t, 1, 0, "VALOR",            text_color=color.new(#8b90a0,0), bgcolor=color.new(#0d0f14,0), text_size=size.small)
+    table.cell(t, 2, 0, "SINAL",            text_color=color.new(#8b90a0,0), bgcolor=color.new(#0d0f14,0), text_size=size.small)
+
+    // ── REGRA DE OURO ──
+    table.cell(t, 0, 1, "── REGRA DE OURO ──", text_color=color.new(#f0a030,0), bgcolor=color.new(#13161e,0), text_size=size.small)
+    table.cell(t, 1, 1, "",   bgcolor=color.new(#13161e,0))
+    table.cell(t, 2, 1, str.tostring(rgo_count) + " / 3", text_color=rgo_green ? c_green : rgo_yellow ? c_yellow : c_red, bgcolor=color.new(#13161e,0), text_size=size.small)
+
+    table.cell(t, 0, 2, "P1 BTC vs MA200D",  text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 2, "$" + str.tostring(math.round(btc_d)), text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 2, p1_bull ? "✓ SUPORTE" : "✗ RISCO", text_color=p1_bull ? c_green : c_red, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    table.cell(t, 0, 3, "P2 BTC.D 4H",      text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 3, str.tostring(math.round(btcd_4h * 100) / 100) + "%", text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 3, p2_bull ? "✓ CAINDO" : "✗ SUBINDO", text_color=p2_bull ? c_green : c_red, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    table.cell(t, 0, 4, "P3 ETH/BTC 4H",    text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 4, str.tostring(math.round(ethbtc_4h * 100000) / 100000), text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 4, p3_bull ? "✓ FORÇA" : "✗ FRAQUEZA", text_color=p3_bull ? c_green : c_red, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    // ── MACRO ──
+    table.cell(t, 0, 5, "── MACRO (" + str.tostring(macro_score) + "/8) ──", text_color=color.new(#f0a030,0), bgcolor=color.new(#13161e,0), text_size=size.small)
+    table.cell(t, 1, 5, "",   bgcolor=color.new(#13161e,0))
+    table.cell(t, 2, 5, macro_green ? "FAVORÁVEL" : macro_yellow ? "NEUTRO" : "BLOQUEADO", text_color=macro_green ? c_green : macro_yellow ? c_yellow : c_red, bgcolor=color.new(#13161e,0), text_size=size.small)
+
+    table.cell(t, 0, 6, "Yield 10Y EUA",   text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 6, str.tostring(math.round(y10 * 100) / 100) + "%", text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 6, yield_ok ? "✓ OK" : yield_warn ? "~ ATENÇÃO" : "✗ BLOCK", text_color=yield_ok ? c_green : yield_warn ? c_yellow : c_red, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    table.cell(t, 0, 7, "DXY Dollar",      text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 7, str.tostring(math.round(dxy_d * 100) / 100), text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 7, dxy_falling ? "✓ CAINDO" : "✗ SUBINDO", text_color=dxy_falling ? c_green : c_red, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    table.cell(t, 0, 8, "SP500 Semanal",   text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 8, str.tostring(math.round(sp500_w)), text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 8, sp500_bull ? "✓ BULL" : "✗ BEAR", text_color=sp500_bull ? c_green : c_red, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    table.cell(t, 0, 9, "XAU / Gold",      text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 9, "$" + str.tostring(math.round(xau_d)), text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 9, xau_bull ? "✓ SUBINDO" : "✗ CAINDO", text_color=xau_bull ? c_green : c_red, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    table.cell(t, 0, 10, "Brent Oil",      text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 10, "$" + str.tostring(math.round(brent)), text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 10, brent_ok ? "✓ OK" : "✗ PRESSÃO", text_color=brent_ok ? c_green : c_red, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    // ── SCORE FINAL ──
+    score_bg = total_pct >= 65 ? color.new(#1D9E75, 70) : total_pct >= 40 ? color.new(#f0a030, 70) : color.new(#e24b4a, 70)
+    score_txt = total_pct >= 65 ? "VERDE — OPERAR" : total_pct >= 40 ? "AMARELO — SELETIVO" : "VERMELHO — NÃO OPERAR"
+
+    table.cell(t, 0, 11, "── VEREDICTO ──", text_color=color.new(#f0a030,0), bgcolor=color.new(#13161e,0), text_size=size.small)
+    table.cell(t, 1, 11, "", bgcolor=color.new(#13161e,0))
+    table.cell(t, 2, 11, "", bgcolor=color.new(#13161e,0))
+
+    table.cell(t, 0, 12, "SCORE GERAL",    text_color=color.white, bgcolor=score_bg, text_size=size.normal)
+    table.cell(t, 1, 12, str.tostring(math.round(total_pct)) + "%", text_color=color.white, bgcolor=score_bg, text_size=size.normal)
+    table.cell(t, 2, 12, score_txt,        text_color=color.white, bgcolor=score_bg, text_size=size.normal)
+
+    // ── BTC.D STATUS ──
+    btcd_status = btcd >= btcd_danger ? "✗ BLOCK >" + str.tostring(btcd_danger) + "%" :
+                  btcd >= btcd_caution ? "~ DECISÃO" :
+                  btcd >= btcd_green   ? "✓ FAVORÁVEL" : "✓ ALTSEASON"
+    btcd_col    = btcd >= btcd_danger ? c_red : btcd >= btcd_caution ? c_yellow : c_green
+
+    table.cell(t, 0, 13, "── BTC.D STATUS ──", text_color=color.new(#f0a030,0), bgcolor=color.new(#13161e,0), text_size=size.small)
+    table.cell(t, 1, 13, "", bgcolor=color.new(#13161e,0))
+    table.cell(t, 2, 13, "", bgcolor=color.new(#13161e,0))
+
+    table.cell(t, 0, 14, "BTC Dominance",  text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 14, str.tostring(math.round(btcd * 100)/100) + "%", text_color=btcd_col, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 14, btcd_status,      text_color=btcd_col, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    // ── CONTEXTO CICLO ──
+    table.cell(t, 0, 15, "── CICLO ──",   text_color=color.new(#f0a030,0), bgcolor=color.new(#13161e,0), text_size=size.small)
+    table.cell(t, 1, 15, "",  bgcolor=color.new(#13161e,0))
+    table.cell(t, 2, 15, "",  bgcolor=color.new(#13161e,0))
+
+    table.cell(t, 0, 16, "Pós-Halving",   text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 16, "Abr 2024",      text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 16, "✓ ~14 meses",   text_color=c_green,     bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+    table.cell(t, 0, 17, "Próx. FOMC",    text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 1, 17, "30 Jul 2026",   text_color=color.white, bgcolor=color.new(#1a1e28,0), text_size=size.small)
+    table.cell(t, 2, 17, "~ 39 dias",     text_color=c_yellow,    bgcolor=color.new(#1a1e28,0), text_size=size.small)
+
+// ─── BACKGROUND COLOR POR SCORE ──────────────────────────────
+bgcolor(total_pct >= 65 ? color.new(c_green, 95) :
+        total_pct >= 40 ? color.new(c_yellow, 95) :
+                          color.new(c_red, 95), title="Score Background")
+
+// ─── ALERTAS AUTOMÁTICOS ─────────────────────────────────────
+alertcondition(rgo_green and macro_green,
+     title="🟢 GRANDE OPORTUNIDADE",
+     message="Score 3/3 + Macro favorável. Ambiente ideal para altcoins. Analisar setups Tier B+.")
+
+alertcondition(btcd > btcd_danger,
+     title="🔴 BTC.D BLOQUEIO",
+     message="BTC.D acima de " + str.tostring(btcd_danger) + "%. Risk-off. Não entrar em altcoins novas.")
+
+alertcondition(btcd < btcd_green,
+     title="🟢 ALTSEASON CONFIRMADA",
+     message="BTC.D abaixo de " + str.tostring(btcd_green) + "%. Altseason plena. Máxima exposição em alts de qualidade.")
+
+alertcondition(y10 < yield_green,
+     title="🟢 YIELD 10Y — GATILHO FED",
+     message="Yield 10Y abaixo de " + str.tostring(yield_green) + "%. Ambiente macro favorável. Aumentar exposição crypto.")
+
+alertcondition(y10 > yield_danger,
+     title="🔴 YIELD 10Y — RISCO MACRO",
+     message="Yield 10Y acima de " + str.tostring(yield_danger) + "%. Reduzir exposição em alts. Considerar PAXG.")
+
+alertcondition(not dxy_falling and not sp500_bull,
+     title="🔴 MACRO BLOQUEADO",
+     message="DXY subindo + SP500 fraco. Risk-off geral. Manter posições mínimas.")
+
+alertcondition(dxy_falling and sp500_bull and rgo_green,
+     title="🟢 CONFLUÊNCIA TOTAL",
+     message="DXY caindo + SP500 bull + RGO 3/3. Janela de grande oportunidade aberta.")
